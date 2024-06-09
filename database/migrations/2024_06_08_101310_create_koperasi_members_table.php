@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('koperasi_members', function (Blueprint $table) {
             $table->id();
-            $table->integer('role_id')->nullable();
-            $table->integer('specification_id')->nullable();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('nama_anggota');
+            $table->string('alamat_anggota');
+            $table->string('handphone');
+            $table->string('tipe_member');
+            $table->boolean('is_penabung')->nullable();
+            $table->boolean('is_peminjam')->nullable();
             $table->datetime('deleted_at')->nullable();
-            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('koperasi_members');
     }
 };
