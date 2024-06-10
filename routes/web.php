@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\PenjualanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,3 +32,12 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/inventory/index', [InventoryController::class,'index'])->name('inventory.stock');
+Route::post('/additem', [InventoryController::class, 'store'])->name('inventory.store');
+
+Route::get('/inventory/penjualan', [PenjualanController::class,'penjualanindex'])->name('inventory.penjualan.index');
+Route::post('/penjualan', [PenjualanController::class, 'inputpenjualan'])->name('penjualan.store');
+
+Route::get('/inventory/pembelian', [PembelianController::class,'pembelianindex'])->name('inventory.pembelian.index');
+Route::post('/pembelian', [PembelianController::class, 'inputpembelian'])->name('pembelian.store');

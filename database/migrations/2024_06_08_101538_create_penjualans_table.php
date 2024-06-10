@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('item_id');
             $table->integer('jumlah_jual');
             $table->integer('harga_jual');
+            $table->string('customer');
             $table->string('status');
             $table->date('tanggal_jual');
             $table->datetime('deleted_at')->nullable();
