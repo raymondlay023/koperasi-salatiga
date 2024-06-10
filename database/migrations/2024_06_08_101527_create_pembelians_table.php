@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pembelians', function (Blueprint $table) {
             $table->id();
-            $table->ingeter('item_id');
+            $table->integer('item_id');
             $table->string('nama');
             $table->integer('jumlah_barang');
             $table->integer('harga_beli');
