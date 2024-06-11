@@ -6,6 +6,10 @@ use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PenjualanController;
 use Illuminate\Support\Facades\Route;
 
+
+use App\Http\Controllers\MemberController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,3 +45,8 @@ Route::post('/penjualan', [PenjualanController::class, 'inputpenjualan'])->name(
 
 Route::get('/inventory/pembelian', [PembelianController::class,'pembelianindex'])->name('inventory.pembelian.index');
 Route::post('/pembelian', [PembelianController::class, 'inputpembelian'])->name('pembelian.store');
+
+
+Route::get('/member/index', [MemberController::class, 'index'])->name('member.index');  
+Route::post('/members/store', [MemberController::class, 'store'])->name('members.store');
+Route::get('/list/member-koperasi', [MemberController::Class, 'listmember'] )->name('member.list');
