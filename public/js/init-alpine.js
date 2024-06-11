@@ -31,9 +31,7 @@ function data() {
       },
       isNotificationsMenuOpen: false,
       toggleNotificationsMenu() {
-        console.log('toggleNotificationsMenu');
         this.isNotificationsMenuOpen = !this.isNotificationsMenuOpen;
-        console.log('isNotificationsMenuOpen:', this.isNotificationsMenuOpen);
       },
       closeNotificationsMenu() {
         this.isNotificationsMenuOpen = false;
@@ -66,6 +64,5 @@ function data() {
   }
 
   document.addEventListener('alpine:init', () => {
-    console.log('Alpine.js is initialized');
     Alpine.data('app', data);
   });
