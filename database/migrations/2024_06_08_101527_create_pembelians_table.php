@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('pembelians', function (Blueprint $table) {
             $table->id();
             $table->integer('item_id');
+<<<<<<< Updated upstream
+=======
+            $table->string('nama');
+>>>>>>> Stashed changes
             $table->integer('jumlah_barang');
             $table->integer('harga_beli');
             $table->string('supplier');
