@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('penjualans', function (Blueprint $table) {
             $table->id();
             $table->integer('item_id');
+            $table->date('tanggal_jual');
             $table->integer('jumlah_jual');
             $table->integer('harga_jual');
             $table->string('customer');
             $table->string('status');
-            $table->date('tanggal_jual');
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();
         });
