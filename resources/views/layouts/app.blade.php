@@ -21,6 +21,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
     <script src="{{ asset('js/charts-lines.js') }}" defer></script>
     <script src="{{ asset('js/charts-pie.js') }}" defer></script>
+
+    <!-- Alpine ui -->
+    <script defer src="https://unpkg.com/@alpinejs/ui@3.13.7-beta.0/dist/cdn.min.js"></script>
+
+    @livewireStyles
+
 </head>
 
 <body class="font-sans antialiased">
@@ -51,6 +57,7 @@
             {{ $slot }}
         </main>
     </div> --}}
+    @livewireScripts
 </body>
 
 </html>

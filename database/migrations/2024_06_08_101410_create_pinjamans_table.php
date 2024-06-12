@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('total_bayar');
             $table->integer('tenor');
             $table->integer('bayar_perbulan');
-            $table->datetime('deleted_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

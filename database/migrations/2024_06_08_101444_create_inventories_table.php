@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('item_name');
             $table->string('tipe_barang');
             $table->integer('stock');
-            $table->datetime('deleted_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

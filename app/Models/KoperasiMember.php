@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KoperasiMember extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
 
@@ -17,8 +18,5 @@ class KoperasiMember extends Model
             'tipe_member',
             'is_penabung',
             'is_peminjam',
-            'deleted_at',
-            'created_at',
-            'updated_at',
     ];
 }

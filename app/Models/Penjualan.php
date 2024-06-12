@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Penjualan extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
 
@@ -17,9 +18,6 @@ class Penjualan extends Model
         'customer',
         'status',
         'tanggal_jual',
-        'deleted_at',
-        'created_at',
-        'updated_at',
     ];
 
     public function inventory()

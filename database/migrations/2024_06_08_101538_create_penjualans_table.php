@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('harga_jual');
             $table->string('customer');
             $table->string('status');
-            $table->datetime('deleted_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

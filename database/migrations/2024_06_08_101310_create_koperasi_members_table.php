@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('tipe_member');
             $table->boolean('is_penabung')->nullable();
             $table->boolean('is_peminjam')->nullable();
-            $table->datetime('deleted_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

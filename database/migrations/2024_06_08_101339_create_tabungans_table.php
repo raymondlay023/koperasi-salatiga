@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->string('status');
             $table->string('created_by');
-            $table->datetime('deleted_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

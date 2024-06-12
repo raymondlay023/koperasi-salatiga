@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('supplier');
             $table->string('status');
             $table->date('tanggal_beli');
-            $table->datetime('deleted_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
