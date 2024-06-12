@@ -47,6 +47,6 @@ Route::get('/inventory/pembelian', [PembelianController::class,'pembelianindex']
 Route::post('/pembelian', [PembelianController::class, 'inputpembelian'])->name('pembelian.store');
 
 
-Route::get('/member/index', [MemberController::class, 'index'])->name('member.index');  
+Route::get('/member/index', [MemberController::class, 'index'])->name('member.index');
 Route::post('/members/store', [MemberController::class, 'store'])->name('members.store');
-Route::get('/list/member-koperasi', [MemberController::Class, 'listmember'] )->name('member.list');
+Route::get('/list/member-koperasi', [MemberController::class, 'listmember'] )->name('member.list');

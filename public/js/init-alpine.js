@@ -43,9 +43,12 @@ function data() {
       closeProfileMenu() {
         this.isProfileMenuOpen = false;
       },
-      isPagesMenuOpen: false,
-      togglePagesMenu() {
-        this.isPagesMenuOpen = !this.isPagesMenuOpen;
+      isMenuOpenMap: {},
+      toggleMenu(menuId) {
+          this.isMenuOpenMap[menuId] = !this.isMenuOpenMap[menuId];
+      },
+      isMenuOpen(menuId) {
+          return this.isMenuOpenMap[menuId] || false;
       },
       // Modal
       isModalOpen: false,
