@@ -13,7 +13,6 @@ class Pembelian extends Model
     protected $fillable = [
 
         'item_id',
-        'nama',
         'jumlah_barang',
         'harga_beli',
         'supplier',

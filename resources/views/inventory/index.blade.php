@@ -162,7 +162,7 @@ table {
             @endif
         </tbody>
     </table>
-
+    
     <script>
         // JavaScript to filter data based on type selection
         document.getElementById('filter_type').addEventListener('change', function() {

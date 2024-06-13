@@ -33,7 +33,38 @@ class InventoryController extends Controller
     }
 
   
+    // function ini return total transaksi peritem
+    public function transaction($id)
+    {
+            $pembelian = Pembelian::where('item_id', $id)->get()->map(function ($item) {
+                return [
+                    'type' => 'Purchase',
+                    'date' => $item->created_at->format('Y-m-d'),
+                    'amount' => '+ ' . $item->jumlah_barang,
+                    'status' => $item->status
+                ];
+            });
 
 
+            $penjualan = Penjualan::where('item_id', $id)->get()->map(function ($item) {
+                return [
+                    'type' => 'Sale',
+                    'date' => $item->created_at->format('Y-m-d'),
+                    'amount' => '- ' . $item->jumlah_jual ,
+                    'status' => $item->status
+                ];
+            });
+
+            // Merge both collections
+            $transactions = $pembelian->merge($penjualan);
+
+            // Sort transactions by date (optional)
+            $transactions = $transactions->sortBy('date');
+
+            // Return as JSON response
+            return response()->json($transactions);
+    }
+    // function ini return total transaksi peritem
   
+
 }

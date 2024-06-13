@@ -40,4 +40,5 @@ class PembelianController extends Controller
 
         return redirect()->route('inventory.pembelian.index')->with('success', 'Pembelian created successfully.');
     }
+
 }
