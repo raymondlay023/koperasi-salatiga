@@ -19,4 +19,14 @@ class KoperasiMember extends Model
             'is_penabung',
             'is_peminjam',
     ];
+
+    public function PinjamanRel()
+    {
+        return $this->hasMany(Pinjaman::class, 'member_id');
+    }
+
+    public function TabunganRel()
+    {
+        return $this->hasMany(Tabungan::class, 'member_id');
+    }
 }

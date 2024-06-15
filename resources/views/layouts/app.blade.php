@@ -26,7 +26,6 @@
     <script defer src="https://unpkg.com/@alpinejs/ui@3.13.7-beta.0/dist/cdn.min.js"></script>
 
     @livewireStyles
-
 </head>
 
 <body class="font-sans antialiased">
@@ -59,5 +58,6 @@
     </div> --}}
     @livewireScripts
 </body>
+@yield('script')
 
 </html>

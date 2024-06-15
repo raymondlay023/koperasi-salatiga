@@ -1,187 +1,107 @@
-<style>
-    form {
-    width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
+<x-app-layout>
+    @section('content')
+        <div class="container p-10">
+            <form method="POST" action="{{ route('inventory.store') }}">
+                @csrf
+                <div class="form-group">
+                    <label for="item_name">Item Name:</label>
+                    <input type="text" class="form-control" id="item_name" name="item_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="tipe_barang">Tipe Barang:</label>
+                    <select class="form-control" id="tipe_barang" name="tipe_barang" required>
+                        <option value="sembako">Sembako</option>
+                        <option value="kedelai">Kedelai</option>
+                        <option value="tahutempe">Tahu & Tempe</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stock">Stock:</label>
+                    <input type="number" class="form-control" id="stock" name="stock" min="0" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
 
-label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="number"],
-select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    box-sizing: border-box; /* Ensure padding and border are included in the width */
-}
-
-button[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-button[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f2f2f2;
-        }
-
-        .no-data {
-            text-align: center;
-            color: red;
-        }
-
-        .pagination {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .pagination button {
-            padding: 10px 20px;
-            margin: 0 5px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        .pagination button:hover {
-            background-color: #0056b3;
-        }
-
-</style>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Index</title>
-</head>
-<body>
-
-<div class="pagination">
-        <!-- Button to go to second page -->
-        <button onclick="location.href='{{ route('inventory.penjualan.index') }}'">Penjualan</button>
-        
-        <!-- Button to go to third page -->
-        <button onclick="location.href='{{ route('inventory.pembelian.index') }}'">Pembelian</button>
-    </div>
-
-    <form method="POST" action="{{ route('inventory.store') }}">
-    @csrf
-    <div class="form-group">
-        <label for="item_name">Item Name:</label>
-        <input type="text" class="form-control" id="item_name" name="item_name" required>
-    </div>
-    <div class="form-group">
-        <label for="tipe_barang">Tipe Barang:</label>
-        <select class="form-control" id="tipe_barang" name="tipe_barang" required>
-            <option value="sembako">Sembako</option>
-            <option value="kedelai">Kedelai</option>
-            <option value="tahutempe">Tahu & Tempe</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="stock">Stock:</label>
-        <input type="number" class="form-control" id="stock" name="stock" min="0" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+            <button @click="openModal"
+                class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-purple">
+                + Add Item
+            </button>
 
 
 
-    <div class="dropdown">
-        <label for="filter_type">Filter by Type:</label>
-            <select id="filter_type">
-                <option value="">All</option>
-                <option value="sembako">Sembako</option>
-                <option value="kedelai">Kedelai</option>
-                <option value="tahutempe">Tahu & Tempe</option>
-            </select>
-    </div>
+            <!-- Modal backdrop. This what you want to place close to the closing body tag -->
+            <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150"
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center">
+                <!-- Modal -->
+                <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0 transform translate-y-1/2" x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0  transform translate-y-1/2" @click.away="closeModal"
+                    @keydown.escape="closeModal"
+                    class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
+                    role="dialog" id="modal">
+                    <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+                    <header class="flex justify-end">
+                        <button
+                            class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+                            aria-label="close" @click="closeModal">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
+                                <path
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" fill-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </header>
+                    <!-- Modal body -->
+                    <div class="mt-4 mb-6">
+                        <!-- Modal title -->
+                        <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+                            Modal header
+                        </p>
+                        <!-- Modal description -->
+                        <p class="text-sm text-gray-700 dark:text-gray-400">
+                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nostrum et
+                            eligendi repudiandae voluptatem tempore!
+                        </p>
+                    </div>
+                    <footer
+                        class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
+                        <button @click="closeModal"
+                            class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+                            Cancel
+                        </button>
+                        <button
+                            class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                            Accept
+                        </button>
+                    </footer>
+                </div>
+            </div>
+            <!-- End of modal backdrop -->
 
-    <table>
-        <thead>
-            <tr>
-                <th>Item Name</th>
-                <th>Type</th>
-                <th>Stock</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if($datas->isEmpty())
-                <tr>
-                    <td colspan="3">No data available</td>
-                </tr>
-            @else
-                @foreach($datas as $data)
-                <tr>
-                    <td>{{ $data->item_name }}</td>
-                    <td>{{ $data->tipe_barang }}</td>
-                    <td>{{ $data->stock }}</td>
-                </tr>
-                @endforeach
-            @endif
-        </tbody>
-    </table>
-    
-    <script>
-        // JavaScript to filter data based on type selection
-        document.getElementById('filter_type').addEventListener('change', function() {
-            var type = this.value;
-            var rows = document.querySelectorAll('tbody tr');
-            rows.forEach(function(row) {
-                var typeCell = row.querySelector('td:nth-child(2)');
-                if (type === '' || typeCell.textContent === type) {
-                    row.style.display = 'table-row';
-                } else {
-                    row.style.display = 'none';
-                }
+            <div class="my-10">
+                <livewire:inventory-table />
+            </div>
+        </div>
+    @endsection
+    @push('script')
+        <script>
+            // JavaScript to filter data based on type selection
+            document.getElementById('filter_type').addEventListener('change', function() {
+                var type = this.value;
+                var rows = document.querySelectorAll('tbody tr');
+                rows.forEach(function(row) {
+                    var typeCell = row.querySelector('td:nth-child(2)');
+                    if (type === '' || typeCell.textContent === type) {
+                        row.style.display = 'table-row';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
             });
-        });
-    </script>
-
-
-    
-</body>
-</html>
-
-
+        </script>
+    @endpush
+</x-app-layout>

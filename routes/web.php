@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\PinjamanController;
+use App\Http\Controllers\TabunganController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -52,3 +54,12 @@ Route::post('/members/store', [MemberController::class, 'store'])->name('members
 Route::get('/list/member-koperasi', [MemberController::class, 'listmember'] )->name('member.list');
 
 Route::get('/test/{id}', [InventoryController::class,'transaction']);
+
+
+
+Route::get('/pinjaman/index', [PinjamanController::class, 'index'])->name('pinjaman.index');
+
+
+
+Route::get('/tabungan/index', [TabunganController::class, 'index'])->name('tabungan.index');
+Route::post('/tabungan/store', [TabunganController::class, 'store'])->name('tabungan.store');
