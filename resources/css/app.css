@@ -1,6 +1,7 @@
+/* @import "flatpickr/dist/flatpickr.min.css"; */
+@import "node_modules/tom-select/dist/css/tom-select.min.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "flatpickr/dist/flatpickr.min.css";
-@import "~tom-select/dist/scss/tom-select.bootstrap5";
-@import "~slim-select/dist/slimselect.css";
+
