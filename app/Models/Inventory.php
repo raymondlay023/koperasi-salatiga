@@ -13,7 +13,7 @@ class Inventory extends Model
     protected $fillable = [
 
         'item_name',
-        'tipe_barang',
+        'item_type_id',
         'stock',
     ];
 
@@ -25,5 +25,10 @@ class Inventory extends Model
     public function penjualan()
     {
         return $this->hasMany(Penjualan::class, 'item_id');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(ItemType::class, 'item_type_id', 'id');
     }
 }

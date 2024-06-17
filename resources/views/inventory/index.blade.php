@@ -1,33 +1,27 @@
+@push('head')
+    <script src="{{ asset('js/focus-trap.js') }}" defer></script>
+@endpush
 <x-app-layout>
     @section('content')
         <div class="container p-10">
-            <form method="POST" action="{{ route('inventory.store') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="item_name">Item Name:</label>
-                    <input type="text" class="form-control" id="item_name" name="item_name" required>
-                </div>
-                <div class="form-group">
-                    <label for="tipe_barang">Tipe Barang:</label>
-                    <select class="form-control" id="tipe_barang" name="tipe_barang" required>
-                        <option value="sembako">Sembako</option>
-                        <option value="kedelai">Kedelai</option>
-                        <option value="tahutempe">Tahu & Tempe</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="stock">Stock:</label>
-                    <input type="number" class="form-control" id="stock" name="stock" min="0" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
 
-            <button @click="openModal"
-                class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-purple">
-                + Add Item
-            </button>
+            <div class="justify-between flex">
+                <div>
+                    <p class="">
+                        Inventories > List
+                    </p>
+                    <p class="text-5xl font-bold">
+                        Inventories
+                    </p>
+                </div>
+                <div>
+                    <button @click="openModal"
+                        class="mt-5 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
+                        Create Item
+                    </button>
+                </div>
 
-
+            </div>
 
             <!-- Modal backdrop. This what you want to place close to the closing body tag -->
             <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150"
@@ -44,7 +38,11 @@
                     class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
                     role="dialog" id="modal">
                     <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
-                    <header class="flex justify-end">
+                    <header class="flex justify-between">
+                        <!-- Modal title -->
+                        <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+                            Create Item
+                        </p>
                         <button
                             class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
                             aria-label="close" @click="closeModal">
@@ -57,25 +55,44 @@
                     </header>
                     <!-- Modal body -->
                     <div class="mt-4 mb-6">
-                        <!-- Modal title -->
-                        <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
-                            Modal header
-                        </p>
                         <!-- Modal description -->
                         <p class="text-sm text-gray-700 dark:text-gray-400">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nostrum et
-                            eligendi repudiandae voluptatem tempore!
+                        <form method="POST" action="{{ route('inventory.store') }}" id="formCreateStock">
+                            @csrf
+                            <div class="form-group mt-4">
+                                <x-input-label for="itemName" :value="_('Item Name')" />
+                                <x-text-input id="itemName" class="block mt-1 w-full" type="text" name="item_name"
+                                    :value="old('item_name')" required autofocus />
+                            </div>
+                            <div class="form-group mt-4">
+                                <x-input-label for="tipeBarang" :value="_('Tipe Barang')" />
+                                <select id="tipeBarang" name="item_type_id" required
+                                    class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:outline-none focus:shadow-outline-blue dark:focus:shadow-outline-gray border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm">
+                                    <option selected disabled value="">
+                                        --Pilih tipe barang--
+                                    </option>
+                                    @foreach ($types as $type)
+                                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group mt-4">
+                                <x-input-label for="stock" :value="_('Stock')" />
+                                <x-text-input id="stock" class="block mt-1 w-full" type="number" min=0 name="stock"
+                                    :value="old('stock')" required />
+                            </div>
+                        </form>
                         </p>
                     </div>
                     <footer
                         class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
                         <button @click="closeModal"
-                            class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+                            class="w-full px-5 py-3 text-sm font-medium leading-5 text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
                             Cancel
                         </button>
-                        <button
-                            class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                            Accept
+                        <button onclick="document.getElementById('formCreateStock').submit()"
+                            class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
+                            Submit
                         </button>
                     </footer>
                 </div>
