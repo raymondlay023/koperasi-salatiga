@@ -1,4 +1,11 @@
 <x-app-layout>
+    @push('head')
+        <!-- Chart CDN -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
+        <script src="{{ asset('js/charts-lines.js') }}" defer></script>
+        <script src="{{ asset('js/charts-pie.js') }}" defer></script>
+    @endpush
     {{-- <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
@@ -20,9 +27,6 @@
             <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
                 Dashboard
             </h2>
-            <div class="my-10">
-                <livewire:inventory-table />
-            </div>
             {{-- <!-- CTA -->
             <a class="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple"
                 href="https://github.com/estevanmaito/windmill-dashboard">

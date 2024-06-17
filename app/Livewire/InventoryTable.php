@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Enums\TipeBarangEnum;
 use App\Models\Inventory;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class InventoryTable extends PowerGridComponent
 {
+    public int $itemTypeId = 0;
     public bool $deferLoading = true;
     public string $loadingComponent = 'components.my-custom-loading';
 
@@ -42,12 +44,23 @@ final class InventoryTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Inventory::query();
+        return Inventory::query()
+            ->when($this->itemTypeId,
+            fn($builder) => $builder->whereHas(
+                'item',
+                fn($builder) => $builder->where('item_type_id', $this->itemTypeId)
+            )
+            ->with(['type'])
+        );
     }
 
     public function relationSearch(): array
     {
-        return [];
+        return [
+            'type' => [
+                'name',
+            ],
+        ];
     }
 
     public function fields(): PowerGridFields
@@ -55,7 +68,7 @@ final class InventoryTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('item_name')
-            ->add('tipe_barang')
+            ->add('item_type', fn ($inventory) => e($inventory->type->name))
             ->add('stock')
             ->add('created_at_formatted', fn ($dish) => Carbon::parse($dish->created_at)->format('d-m-Y'));;
     }
@@ -68,8 +81,7 @@ final class InventoryTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Tipe barang', 'tipe_barang')
-                ->sortable()
+            Column::make('Tipe barang', 'item_type')
                 ->searchable(),
 
             Column::make('Stock', 'stock')
@@ -87,6 +99,9 @@ final class InventoryTable extends PowerGridComponent
     public function filters(): array
     {
         return [
+            Filter::enumSelect('item_type', 'inventories.item_type_id')
+                ->dataSource(TipeBarangEnum::cases())
+                ->optionLabel('inventories.item_type_id'),
         ];
     }
 
@@ -107,10 +122,10 @@ final class InventoryTable extends PowerGridComponent
         ];
     }
 
-    public function hydrate(): void
-    {
-        sleep(1);  // ⏳ Purposefully slow down the Component loading for demonstration purposes.
-    }
+    // public function hydrate(): void
+    // {
+    //     sleep(1);  // ⏳ Purposefully slow down the Component loading for demonstration purposes.
+    // }
 
     /*
     public function actionRules($row): array
