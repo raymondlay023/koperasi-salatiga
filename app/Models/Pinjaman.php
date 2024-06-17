@@ -18,6 +18,8 @@ class Pinjaman extends Model
         'total_bayar',
         'tenor',
         'bayar_perbulan',
+        'is_lunas',
+        'tenor_counter',
     ];
 
     public function memberpinjaman()

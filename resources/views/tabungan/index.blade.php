@@ -50,7 +50,8 @@
     </style>
 </head>
 <body>
-
+<a href="{{ route('tabungan.setor') }}" class="btn btn-primary">Setor Tabungan</a>
+<a href="{{ route('list.transaksi.tabungan')}}"  class="btn btn-primary">List Transaksi</a>
 <form method="POST" action="{{ route('tabungan.store') }}">
     @csrf
     <div class="form-group">
@@ -71,14 +72,47 @@
         <input type="date" class="form-control" id="start_date" name="start_date" required>
     </div>
     <div class="form-group">
-        <label for="status">Status:</label>
+        <label for="status">Jenis Simpanan:</label>
         <select class="form-control" id="status" name="status" required>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option value="simpanan_pokok">Simpanan Pokok</option>
+            <option value="simpanan_wajib">Simpanan Wajib</option>
+            <option value="simpanan_bagong">Simpanan Bagong</option>
+            <option value="simpanan_semar">Simpanan Semar</option>
+            <option value="simpanan_kedelai">Simpanan Kedelai</option>
         </select>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
+
+@if($tabungans->isEmpty())
+        <p style="text-align: center;">No Member available.</p>
+    @else
+        <table>
+            <thead>
+                <tr>
+                    <th>Nama Anggota</th>
+                    <th>Handphone</th>
+                    <th>Saldo</th>
+                    <th>Tanggal Mulai Menabung</th>
+                    <th>Jenis Tabungan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($tabungans as $tabungan)
+                    <tr>
+                        <td>{{ $tabungan->membertabungan->nama_anggota }}</td>
+                        <td>{{ $tabungan->membertabungan->handphone }}</td>
+                        <td>{{ $tabungan->saldo }}</td>
+                        <td>{{ $tabungan->start_date }}</td>
+                        <td>{{ str_replace('_', ' ', $tabungan->status) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
+
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

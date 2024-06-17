@@ -22,4 +22,10 @@ class Tabungan extends Model
     {
         return $this->belongsTo(KoperasiMember::class, 'member_id');
     }
+
+
+    public function transaksi()
+    {
+        return $this->hasMany(TabunganTransaction::class, 'tabungan_id');
+    }
 }

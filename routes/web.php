@@ -63,3 +63,7 @@ Route::get('/pinjaman/index', [PinjamanController::class, 'index'])->name('pinja
 
 Route::get('/tabungan/index', [TabunganController::class, 'index'])->name('tabungan.index');
 Route::post('/tabungan/store', [TabunganController::class, 'store'])->name('tabungan.store');
+Route::get('/tabungan/store/page', [TabunganController::class, 'setortabungan'])->name('tabungan.setor');
+Route::post('/tabungan/store/insert', [TabunganController::class, 'setorinsert'])->name('tabungan.insert');  
+
+Route::get('/list/transaction/tabungan',[TabunganController::class, 'listtransaction'])->name('list.transaksi.tabungan');
