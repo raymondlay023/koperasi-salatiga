@@ -41,6 +41,8 @@ require __DIR__.'/auth.php';
 
 Route::get('/inventory/index', [InventoryController::class,'index'])->name('inventory.stock');
 Route::post('/additem', [InventoryController::class, 'store'])->name('inventory.store');
+Route::put('inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
+Route::delete('inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
 
 Route::get('/inventory/penjualan', [PenjualanController::class,'penjualanindex'])->name('inventory.penjualan.index');
 Route::post('/penjualan', [PenjualanController::class, 'inputpenjualan'])->name('penjualan.store');
@@ -64,6 +66,6 @@ Route::get('/pinjaman/index', [PinjamanController::class, 'index'])->name('pinja
 Route::get('/tabungan/index', [TabunganController::class, 'index'])->name('tabungan.index');
 Route::post('/tabungan/store', [TabunganController::class, 'store'])->name('tabungan.store');
 Route::get('/tabungan/store/page', [TabunganController::class, 'setortabungan'])->name('tabungan.setor');
-Route::post('/tabungan/store/insert', [TabunganController::class, 'setorinsert'])->name('tabungan.insert');  
+Route::post('/tabungan/store/insert', [TabunganController::class, 'setorinsert'])->name('tabungan.insert');
 
 Route::get('/list/transaction/tabungan',[TabunganController::class, 'listtransaction'])->name('list.transaksi.tabungan');

@@ -50,19 +50,22 @@ function data() {
       isMenuOpen(menuId) {
           return this.isMenuOpenMap[menuId] || false;
       },
-      // Modal
-      isModalOpen: false,
-      trapCleanup: null,
-      openModal() {
-        this.isModalOpen = true;
-        this.trapCleanup = focusTrap(document.querySelector('#modal'));
-      },
-      closeModal() {
-        this.isModalOpen = false;
+        // Modal
+        modalMap: {},
+        trapCleanup: null,
+        openModal(modalId) {
+        this.modalMap[modalId] = true;
+        this.trapCleanup = focusTrap(document.querySelector(`#${modalId}`));
+        },
+        closeModal(modalId) {
+        this.modalMap[modalId] = false;
         if (this.trapCleanup) {
-          this.trapCleanup();
+            this.trapCleanup();
         }
-      },
+        },
+        isModalOpen(modalId) {
+        return this.modalMap[modalId] || false;
+        },
     };
   }
 

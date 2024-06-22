@@ -4,8 +4,11 @@ namespace App\Livewire;
 
 use App\Enums\TipeBarangEnum;
 use App\Models\Inventory;
+use App\Models\ItemType;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\View\View;
+use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
@@ -105,21 +108,27 @@ final class InventoryTable extends PowerGridComponent
         ];
     }
 
-    #[\Livewire\Attributes\On('edit')]
-    public function edit($rowId): void
-    {
-        $this->js('alert('.$rowId.')');
-    }
+    // public function actions(Inventory $row): array
+    // {
+    //     return [
+    //         Button::add('edit')
+    //             ->slot('Edit: '.$row->id)
+    //             ->id('edit-'.$row->id)
+    //             ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+    //             ->dispatch('clickToEdit', ['inventoryId' => $row->id]),
+    //     ];
+    // }
 
-    public function actions(Inventory $row): array
+    // #[On('clickToEdit')]
+    // public function clickToEdit(int $inventoryId): void
+    // {
+    //     $this->js("alert('Editing #{$inventoryId}')");
+    // }
+
+    public function actionsFromView($row) : View
     {
-        return [
-            Button::add('edit')
-                ->slot('Edit: '.$row->id)
-                ->id()
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['rowId' => $row->id])
-        ];
+        $types = ItemType::all();
+        return view('partials.inventory-actionv-view', ['row' => $row, 'types' => $types]);
     }
 
     // public function hydrate(): void

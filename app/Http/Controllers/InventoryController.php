@@ -34,7 +34,7 @@ class InventoryController extends Controller
         return redirect()->back()->with('success', 'Inventory added successfully!');
     }
 
-  
+
     // function ini return total transaksi peritem
     public function transaction($id)
     {
@@ -67,6 +67,17 @@ class InventoryController extends Controller
             return response()->json($transactions);
     }
     // function ini return total transaksi peritem
-  
+
+    public function update(Request $request, $id)
+    {
+        Inventory::find($id)->update($request->all());
+        return redirect()->back()->with('success', 'Inventory successfully updated!');
+    }
+
+    public function destroy($id)
+    {
+        Inventory::find($id)->delete();
+        return redirect()->back()->with('success', 'Inventory successfully deleted!');
+    }
 
 }
