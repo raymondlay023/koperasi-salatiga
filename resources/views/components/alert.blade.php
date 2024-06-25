@@ -19,7 +19,8 @@
     ];
 @endphp
 
-<div class="{{ $alertClasses[$type] }} px-4 py-3 rounded relative flex items-center m-10" role="alert">
+<div x-data="{ show: true }" x-show="show"
+    class="{{ $alertClasses[$type] }} px-4 py-3 rounded relative flex items-center m-10" role="alert">
     <div>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="h-6 w-6 {{ $iconClasses[$type] }}">
@@ -31,3 +32,17 @@
         <span class="block sm:inline">{{ $message }}</span>
     </div>
 </div>
+{{-- Not working, last checked: 25/06/24 --}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            const alertElement = document.querySelector('.alert-component');
+            if (alertElement) {
+                alertElement.style.transition = 'opacity 1s';
+                alertElement.style.opacity = 0;
+                setTimeout(() => alertElement.remove(),
+                    1000); // Wait for the transition to complete before removing the element
+            }
+        }, 3000); // 3 seconds
+    });
+</script>

@@ -39,6 +39,6 @@ class PenjualanController extends Controller
         $inventory->stock -= $request->jumlah_jual;
         $inventory->save();
 
-        return redirect()->route('inventory.penjualan.index')->with('success', 'Pembelian created successfully.');
+        return redirect()->route('penjualan.index')->with('success', 'Penjualan created successfully.');
     }
 }

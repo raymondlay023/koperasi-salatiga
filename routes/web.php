@@ -44,10 +44,10 @@ Route::post('/additem', [InventoryController::class, 'store'])->name('inventory.
 Route::put('inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
 Route::delete('inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
 
-Route::get('/inventory/penjualan', [PenjualanController::class,'penjualanindex'])->name('inventory.penjualan.index');
+Route::get('/penjualans', [PenjualanController::class,'penjualanindex'])->name('penjualan.index');
 Route::post('/penjualan', [PenjualanController::class, 'inputpenjualan'])->name('penjualan.store');
 
-Route::get('/inventory/pembelian', [PembelianController::class,'pembelianindex'])->name('inventory.pembelian.index');
+Route::get('/pembelians', [PembelianController::class,'pembelianindex'])->name('pembelian.index');
 Route::post('/pembelian', [PembelianController::class, 'inputpembelian'])->name('pembelian.store');
 
 

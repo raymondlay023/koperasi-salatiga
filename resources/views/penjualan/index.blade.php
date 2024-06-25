@@ -1,12 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="p-10">
+        @include('partials.alert-success-error')
 
-    @include('partials.alert-success-error')
+        <div class="justify-between flex">
+            <div>
+                <p>
+                    <a href="{{ route('penjualan.index') }}" class="text-blue-800"> Penjualan </a> > <span
+                        class="text-gray-500">List</span>
+                </p>
+                <p class="text-5xl font-bold">
+                    Penjualan List
+                </p>
+            </div>
+            <div>
+                <button @click="openModal('create-penjualan-modal')"
+                    class="mt-5 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
+                    Create Penjualan
+                </button>
+            </div>
+        </div>
 
-    <div class="m-10">
-        <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-            <form method="POST" action="{{ route('penjualan.store') }}">
+        <x-custom-modal id="create-penjualan-modal" title="Create Penjualan">
+            <form method="POST" action="{{ route('penjualan.store') }}" id="formCreatePenjualan">
                 @csrf
                 <div class="form-group">
                     <x-input-label for="tipe_barang" :value="_('Tipe Barang')"></x-input-label>
@@ -52,48 +69,54 @@
                     <x-text-input type="date" id="tanggal_jual" class="block mt-1 w-full" name="tanggal_jual"
                         :value="old('tanggal_jual')" required />
                 </div>
-                <div class="form-group mt-7">
-                    <x-primary-button class="w-full"> <span class="w-full">Submit</span> </x-primary-button>
-                </div>
             </form>
+            <x-slot name="footer">
+                <!-- Footer content goes here -->
+                <x-primary-button onclick="document.getElementById('formCreatePenjualan').submit()">
+                    <span>Submit</span> </x-primary-button>
+            </x-slot>
+        </x-custom-modal>
+
+        {{-- table below here --}}
+        <div class="my-10">
+            <livewire:penjualan-table />
         </div>
 
-    </div>
-
-    @if ($penjualan->isEmpty())
-        <p style="text-align: center;">No selling history available.</p>
-    @else
-        <table>
-            <thead>
-                <tr>
-                    <th>Item Name</th>
-                    <th>Jumlah Barang</th>
-                    <th>Harga Jual</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Total Harga</th>
-                    <th>Tanggal Jual</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($penjualan as $selling)
+        {{-- @if ($penjualan->isEmpty())
+            <p style="text-align: center;">No selling history available.</p>
+        @else
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ $selling->inventory->item_name }}</td>
-                        <td>{{ $selling->jumlah_jual }}</td>
-                        <td>{{ $selling->harga_jual }}</td>
-                        <td>{{ $selling->customer }}</td>
-                        <td>{{ $selling->status }}</td>
-                        @php
-                            $totalharga = $selling->jumlah_jual * $selling->harga_jual;
-                            $totalharga_idr = number_format($totalharga, 0, ',', '.');
-                        @endphp
-                        <td>Rp.{{ $totalharga_idr }}</td>
-                        <td>{{ $selling->tanggal_jual }}</td>
+                        <th>Item Name</th>
+                        <th>Jumlah Barang</th>
+                        <th>Harga Jual</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Total Harga</th>
+                        <th>Tanggal Jual</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
+                </thead>
+                <tbody>
+                    @foreach ($penjualan as $selling)
+                        <tr>
+                            <td>{{ $selling->inventory->item_name }}</td>
+                            <td>{{ $selling->jumlah_jual }}</td>
+                            <td>{{ $selling->harga_jual }}</td>
+                            <td>{{ $selling->customer }}</td>
+                            <td>{{ $selling->status }}</td>
+                            @php
+                                $totalharga = $selling->jumlah_jual * $selling->harga_jual;
+                                $totalharga_idr = number_format($totalharga, 0, ',', '.');
+                            @endphp
+                            <td>Rp.{{ $totalharga_idr }}</td>
+                            <td>{{ $selling->tanggal_jual }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif --}}
+    </div>
 @endsection
 
 @push('extraJs')
