@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Inventory;
+use App\Models\ItemType;
 use App\Models\Pembelian;
 use App\Models\Penjualan;
 
@@ -13,9 +14,10 @@ class PenjualanController extends Controller
     {
         $datas = Inventory::all();
         $penjualan = Penjualan::with('inventory')->get();
-        $types = Inventory::select('tipe_barang')->distinct()->get();
+        // $types = Inventory::select('tipe_barang')->distinct()->get();
+        $types = ItemType::all();
         $infos = Penjualan::get();
-        return view('inventory.penjualanindex', compact('datas','infos','types','penjualan'));
+        return view('penjualan.index', compact('datas','infos','types','penjualan'));
     }
 
     public function inputpenjualan(Request $request)
