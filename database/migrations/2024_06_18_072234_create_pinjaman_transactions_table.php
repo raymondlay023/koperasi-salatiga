@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('pinjaman_transactions', function (Blueprint $table) {
             $table->id();
             $table->integer('pinjaman_id');
-            $table->integet('bayar');
+            $table->integer('bayar');
             $table->string('remark')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

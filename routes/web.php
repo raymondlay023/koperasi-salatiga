@@ -60,6 +60,10 @@ Route::get('/test/{id}', [InventoryController::class,'transaction']);
 
 
 Route::get('/pinjaman/index', [PinjamanController::class, 'index'])->name('pinjaman.index');
+Route::post('/pinjaman/store', [PinjamanController::class, 'store'])->name('pinjaman.store');
+Route::get('/pinjaman/bayar', [PinjamanController::class, 'bayarpinjaman'])->name('pinjaman.bayar');
+Route::post('/pinjaman/bayar-proses', [PinjamanController::class, 'prosesbayar'])->name('pinjaman.bayarproses');
+
 
 
 
