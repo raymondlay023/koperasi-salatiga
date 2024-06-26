@@ -1,96 +1,103 @@
-<!-- resources/views/pembelian/create.blade.php -->
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Pembelian</title>
-    <style>
-        form {
-            width: 300px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
+@section('content')
+    <div class="p-10">
+        @include('partials.alert-success-error')
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
+        <div class="justify-between flex">
+            <div>
+                <p>
+                    <a href="{{ route('pembelian.index') }}" class="text-blue-800"> Pembelian </a> > <span
+                        class="text-gray-500">List</span>
+                </p>
+                <p class="text-5xl font-bold">
+                    Pembelian List
+                </p>
+            </div>
+            <div>
+                <button @click="openModal('create-pembelian-modal')"
+                    class="mt-5 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
+                    Create Pembelian
+                </button>
+            </div>
+        </div>
 
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            box-sizing: border-box;
-        }
 
-        button[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
+        <x-custom-modal id="create-pembelian-modal" title="Create Pembelian">
+            <form method="POST" action="{{ route('pembelian.store') }}" id="formCreatePembelian">
+                @csrf
+                <div class="form-group">
+                    <x-input-label for="tipe_barang" :value="_('Tipe Barang')"></x-input-label>
+                    <x-select-input placeholder="Select Type" id="tipe_barang" name="tipe_barang" required>
+                        @foreach ($types as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @endforeach
+                    </x-select-input>
+                </div>
+                <div class="form-group mt-3">
+                    <x-input-label for="itemName" :value="_('Item')"></x-input-label>
+                    <x-select-input placeholder="Select Item" id="item_id" name="item_id" required>
+                        <!-- Items will be populated based on selected type -->
+                    </x-select-input>
+                </div>
+                <div class="form-group mt-3">
+                    <x-input-label for="jumlah_barang" :value="_('Jumlah Barang')"></x-input-label>
+                    <x-text-input type="number" id="jumlah_barang" class="block mt-1 w-full" name="jumlah_barang"
+                        :value="old('jumlah_barang')" required min="0" value ="0" />
+                </div>
+                <div class="form-group mt-3">
+                    <x-input-label for="harga_beli" :value="_('Harga Beli')"></x-input-label>
+                    <x-text-input type="number" id="harga_beli" class="block mt-1 w-full" name="harga_beli"
+                        :value="old('harga_beli')" required min="0" value ="0" />
+                </div>
+                <div class="form-group mt-3">
+                    <x-input-label for="supplier">Supplier</x-input-label>
+                    <x-text-input type="text" id="supplier" class="block mt-1 w-full" name="supplier" :value="old('supplier')"
+                        required />
+                </div>
+                <div class="form-group mt-3">
+                    <x-input-label for="status" :value="_('Status')"></x-input-label>
+                    <x-select-input id="status" name="status" required>
+                        <option value="Tunai">Tunai</option>
+                        <option value="Credit">Credit</option>
+                    </x-select-input>
+                </div>
+                <div class="form-group mt-3">
+                    <x-input-label for="tanggal_beli" :value="_('Tanggal Beli')"></x-input-label>
+                    <x-text-input type="date" id="tanggal_beli" class="block mt-1 w-full" name="tanggal_beli"
+                        :value="old('tanggal_beli')" required />
+                </div>
+            </form>
+            <x-slot name="footer">
+                <x-primary-button onclick="document.getElementById('formCreatePembelian').submit()">
+                    <span>Submit</span> </x-primary-button>
+            </x-slot>
+        </x-custom-modal>
 
-        button[type="submit"]:hover {
-            background-color: #0056b3;
-        }
+        <div class="my-10">
+            <livewire:pembelian-table />
+        </div>
+    </div>
+@endsection
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f2f2f2;
-        }
-
-        .no-data {
-            text-align: center;
-            color: red;
-        }
-    </style>
+@push('extraJs')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const tipeBarangSelect = document.getElementById('tipe_barang');
             const itemSelect = document.getElementById('item_id');
             const inventoryData = @json($datas);
+            console.log(inventoryData);
 
             tipeBarangSelect.addEventListener('change', function() {
                 const selectedType = this.value;
+                console.log(selectedType);
                 updateItemDropdown(selectedType);
             });
 
             function updateItemDropdown(selectedType) {
                 itemSelect.innerHTML = '';
-                const filteredItems = inventoryData.filter(item => item.tipe_barang === selectedType);
+                const filteredItems = inventoryData.filter(item => item.item_type_id.toString() === selectedType
+                    .toString());
 
                 filteredItems.forEach(item => {
                     const option = document.createElement('option');
@@ -101,89 +108,4 @@
             }
         });
     </script>
-</head>
-
-<body>
-    <form method="POST" action="{{ route('pembelian.store') }}">
-        @csrf
-        <div class="form-group">
-            <label for="tipe_barang">Tipe Barang:</label>
-            <select class="form-control" id="tipe_barang" name="tipe_barang" required>
-                <option value="">Select Type</option>
-                @foreach ($types as $type)
-                    <option value="{{ $type->tipe_barang }}">{{ $type->tipe_barang }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="item_id">Item:</label>
-            <select class="form-control" id="item_id" name="item_id" required>
-                <option value="">Select Item</option>
-                <!-- Items will be populated based on selected type -->
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="jumlah_barang">Jumlah Barang:</label>
-            <input type="number" class="form-control" id="jumlah_barang" name="jumlah_barang" min="0" required>
-        </div>
-        <div class="form-group">
-            <label for="harga_beli">Harga Beli:</label>
-            <input type="number" class="form-control" id="harga_beli" name="harga_beli" min="0" required>
-        </div>
-        <div class="form-group">
-            <label for="supplier">Supplier:</label>
-            <input type="text" class="form-control" id="supplier" name="supplier" required>
-        </div>
-        <div class="form-group">
-            <label for="status">Status:</label>
-            <select class="form-control" id="status" name="status" required>
-                <option value="Tunai">Tunai</option>
-                <option value="Credit">Credit</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="tanggal_beli">Tanggal Beli:</label>
-            <input type="date" class="form-control" id="tanggal_beli" name="tanggal_beli" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-
-
-
-    @if ($pembelian->isEmpty())
-        <p style="text-align: center;">No purchase history available.</p>
-    @else
-        <table>
-            <thead>
-                <tr>
-                    <th>Item Name</th>
-                    <th>Jumlah Barang</th>
-                    <th>Harga Beli</th>
-                    <th>Supplier</th>
-                    <th>Status</th>
-                    <th>Total Harga</th>
-                    <th>Tanggal Beli</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($pembelian as $purchase)
-                    <tr>
-                        <td>{{ $purchase->inventory->item_name }}</td>
-                        <td>{{ $purchase->jumlah_barang }}</td>
-                        <td>{{ $purchase->harga_beli }}</td>
-                        <td>{{ $purchase->supplier }}</td>
-                        <td>{{ $purchase->status }}</td>
-                        @php
-                            $totalharga = $purchase->harga_beli * $purchase->jumlah_barang;
-                            $totalharga_idr = number_format($totalharga, 0, ',', '.');
-                        @endphp
-                        <td>Rp.{{ $totalharga_idr }}</td>
-                        <td>{{ $purchase->tanggal_beli }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
-</body>
-
-</html>
+@endpush
