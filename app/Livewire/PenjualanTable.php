@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\ItemType;
 use App\Models\Penjualan;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -73,7 +74,7 @@ final class PenjualanTable extends PowerGridComponent
             ->add('customer')
             ->add('status')
             ->add('tanggal_jual_formatted', fn (Penjualan $model) => Carbon::parse($model->tanggal_jual)->format('d/m/Y'))
-            ->add('created_at');
+            ->add('created_at_formatted', fn(Penjualan $model) => Carbon::parse($model->created_at)->format('d/m/Y h:i:s'));
     }
 
     public function columns(): array
@@ -105,10 +106,6 @@ final class PenjualanTable extends PowerGridComponent
             Column::make('Created at', 'created_at_formatted', 'created_at')
                 ->sortable(),
 
-            Column::make('Created at', 'created_at')
-                ->sortable()
-                ->searchable(),
-
             Column::action('Action')
         ];
     }
@@ -139,8 +136,8 @@ final class PenjualanTable extends PowerGridComponent
 
     public function actionsFromView($row) : View
     {
-        // $types = ItemType::all();
-        return view('partials.penjualan-action-view', ['row' => $row]);
+        $types = ItemType::all();
+        return view('partials.penjualan-action-view', ['row' => $row, 'types' => $types]);
     }
 
     /*
