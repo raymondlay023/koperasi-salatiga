@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Inventory;
+use App\Models\ItemType;
 use App\Models\Pembelian;
 use App\Models\Penjualan;
 
@@ -14,14 +15,15 @@ class PembelianController extends Controller
     {
         $datas = Inventory::get();
         $pembelian = Pembelian::with('inventory')->get();
-        $types = Inventory::select('tipe_barang')->distinct()->get();
+        // $types = Inventory::select('item_type_id')->distinct()->get();
+        $types = ItemType::all();
         $infos = Pembelian::get();
-        return view('inventory.pembelianindex', compact('pembelian','infos','types','datas'));
+        return view('pembelian.index', compact('pembelian','infos','types','datas'));
     }
 
     public function inputpembelian(Request $request)
     {
-        
+
         $request->validate([
             'item_id' => 'required|exists:inventories,id',
             'jumlah_barang' => 'required|integer|min:0',

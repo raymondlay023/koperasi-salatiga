@@ -1,6 +1,7 @@
 <!-- resources/views/pembelian/create.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,7 +53,8 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
@@ -100,6 +102,7 @@
         });
     </script>
 </head>
+
 <body>
     <form method="POST" action="{{ route('pembelian.store') }}">
         @csrf
@@ -107,7 +110,7 @@
             <label for="tipe_barang">Tipe Barang:</label>
             <select class="form-control" id="tipe_barang" name="tipe_barang" required>
                 <option value="">Select Type</option>
-                @foreach($types as $type)
+                @foreach ($types as $type)
                     <option value="{{ $type->tipe_barang }}">{{ $type->tipe_barang }}</option>
                 @endforeach
             </select>
@@ -147,7 +150,7 @@
 
 
 
-    @if($pembelian->isEmpty())
+    @if ($pembelian->isEmpty())
         <p style="text-align: center;">No purchase history available.</p>
     @else
         <table>
@@ -163,7 +166,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($pembelian as $purchase)
+                @foreach ($pembelian as $purchase)
                     <tr>
                         <td>{{ $purchase->inventory->item_name }}</td>
                         <td>{{ $purchase->jumlah_barang }}</td>
@@ -182,4 +185,5 @@
         </table>
     @endif
 </body>
+
 </html>
