@@ -56,6 +56,7 @@
 <br>
 <br>
 <a href="{{ route('pinjaman.bayar') }}" class="btn btn-primary">Bayar Pinjaman</a>
+<a href="{{ route('list.pinjaman.transaction') }}" class="btn btn-primary">Transaksi Pinjaman</a>
 <br>
 <br>
 <br>

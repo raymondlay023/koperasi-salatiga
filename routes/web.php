@@ -63,6 +63,7 @@ Route::get('/pinjaman/index', [PinjamanController::class, 'index'])->name('pinja
 Route::post('/pinjaman/store', [PinjamanController::class, 'store'])->name('pinjaman.store');
 Route::get('/pinjaman/bayar', [PinjamanController::class, 'bayarpinjaman'])->name('pinjaman.bayar');
 Route::post('/pinjaman/bayar-proses', [PinjamanController::class, 'prosesbayar'])->name('pinjaman.bayarproses');
+Route::get('/pinjaman/list-transaction', [PinjamanController::class, 'transactionlist'])->name('list.pinjaman.transaction');
 
 
 

@@ -59,12 +59,48 @@ class PinjamanController extends Controller
     public function bayarpinjaman()
     {
         $pinjamans = Pinjaman::with('memberpinjaman')->get();
+        // dd($pinjamans);
 
         return view('pinjaman.bayar', compact('pinjamans'));
     }
 
     public function prosesbayar(Request $request)
     {
-        dd($request->all());
+        
+
+        $request->validate([
+            'pinjaman_id' => 'required|exists:pinjamans,id',
+            'bayar' => 'required|string',
+            'remark' => 'nullable|string',
+        ]);
+
+        // Remove "Rp" prefix and formatting from 'bayar' value
+        $bayar = str_replace(['Rp', '.', ' '], '', $request->input('bayar'));
+        
+        PinjamanTransaction::create([
+            'pinjaman_id' => $request->input('pinjaman_id'),
+            'bayar' => $bayar,
+            'remark' => $request->input('remark'),
+        ]);
+
+        $pinjaman = Pinjaman::find($request->input('pinjaman_id'));
+        $pinjaman->tenor_counter += 1;
+
+        if($pinjaman->tenor_counter === $pinjaman->tenor)
+        {
+            $pinjaman->is_lunas = true; 
+        }
+
+        $pinjaman->save();
+
+        return redirect()->back()->with('success', 'Payment processed successfully.');
+    }
+
+    public function transactionlist()
+    {
+        $datas = PinjamanTransaction::with('Pinjamanlist', 'Pinjamanlist.memberpinjaman')->get();
+        // dd($datas);
+        return view('pinjaman.listtransaction', compact('datas'));
+
     }
 }
