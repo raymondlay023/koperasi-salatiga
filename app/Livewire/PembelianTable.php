@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\ItemType;
-use App\Models\Penjualan;
+use App\Models\Pembelian;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
@@ -18,7 +18,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
-final class PenjualanTable extends PowerGridComponent
+final class PembelianTable extends PowerGridComponent
 {
     public int $itemId = 0;
     public bool $deferLoading = true;
@@ -46,20 +46,19 @@ final class PenjualanTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Penjualan::query()
+        return Pembelian::query()
             ->when($this->itemId,
-            fn($builder) => $builder->whereHas(
-                'inventory',
-                fn($builder) => $builder->where('item_id', $this->itemId)
-            )->with(['inventory'])
-        );
+                fn($builder) => $builder->whereHas(
+                    'inventory',
+                    fn($builder) => $builder->where('item_id', $this->itemId)
+                )->with(['inventory']));
     }
 
     public function relationSearch(): array
     {
         return [
             'inventory' => [
-                'item_name',
+                'item_name'
             ]
         ];
     }
@@ -68,13 +67,13 @@ final class PenjualanTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('item_name', fn($penjualan) => e($penjualan->inventory->item_name))
-            ->add('jumlah_jual')
-            ->add('harga_jual')
-            ->add('customer')
+            ->add('item_name', fn($pembelian) => e($pembelian->inventory->item_name))
+            ->add('jumlah_barang')
+            ->add('harga_beli')
+            ->add('supplier')
             ->add('status')
-            ->add('tanggal_jual_formatted', fn (Penjualan $model) => Carbon::parse($model->tanggal_jual)->format('d/m/Y'))
-            ->add('created_at_formatted', fn(Penjualan $model) => Carbon::parse($model->created_at)->format('d/m/Y h:i:s'));
+            ->add('tanggal_beli_formatted', fn (Pembelian $model) => Carbon::parse($model->tanggal_beli)->format('d/m/Y'))
+            ->add('created_at_formatted', fn(Pembelian $model) => Carbon::parse($model->created_at)->format('d/M/Y (h:i:s)'));
     }
 
     public function columns(): array
@@ -84,15 +83,15 @@ final class PenjualanTable extends PowerGridComponent
             Column::make('Item name', 'item_name')
                 ->searchable(),
 
-            Column::make('Jumlah jual', 'jumlah_jual')
+            Column::make('Jumlah barang', 'jumlah_barang')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Harga jual', 'harga_jual')
+            Column::make('Harga beli', 'harga_beli')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Customer', 'customer')
+            Column::make('Supplier', 'supplier')
                 ->sortable()
                 ->searchable(),
 
@@ -100,7 +99,7 @@ final class PenjualanTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Tanggal jual', 'tanggal_jual_formatted', 'tanggal_jual')
+            Column::make('Tanggal beli', 'tanggal_beli_formatted', 'tanggal_beli')
                 ->sortable(),
 
             Column::make('Created at', 'created_at_formatted', 'created_at')
@@ -113,7 +112,7 @@ final class PenjualanTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::datepicker('tanggal_jual'),
+            Filter::datepicker('tanggal_beli'),
         ];
     }
 
@@ -123,7 +122,7 @@ final class PenjualanTable extends PowerGridComponent
     //     $this->js('alert('.$rowId.')');
     // }
 
-    // public function actions(Penjualan $row): array
+    // public function actions(Pembelian $row): array
     // {
     //     return [
     //         Button::add('edit')
@@ -137,7 +136,7 @@ final class PenjualanTable extends PowerGridComponent
     public function actionsFromView($row) : View
     {
         $types = ItemType::all();
-        return view('partials.penjualan-action-view', ['row' => $row, 'types' => $types]);
+        return view('partials.pembelian-action-view', ['row' => $row, 'types' => $types]);
     }
 
     /*

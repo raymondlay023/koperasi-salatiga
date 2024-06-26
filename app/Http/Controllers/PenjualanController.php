@@ -39,6 +39,12 @@ class PenjualanController extends Controller
         $inventory->stock -= $request->jumlah_jual;
         $inventory->save();
 
-        return redirect()->route('penjualan.index')->with('success', 'Penjualan created successfully.');
+        return redirect()->route('penjualan.index')->with('success', 'Penjualan created successfully!');
+    }
+
+    public function destroy($id)
+    {
+        Penjualan::find($id)->delete();
+        return redirect()->back()->with('success', 'Penjualan deleted successfully!');
     }
 }
