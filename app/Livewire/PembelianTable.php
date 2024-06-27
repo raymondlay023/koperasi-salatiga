@@ -73,7 +73,7 @@ final class PembelianTable extends PowerGridComponent
             ->add('supplier')
             ->add('status')
             ->add('tanggal_beli_formatted', fn (Pembelian $model) => Carbon::parse($model->tanggal_beli)->format('d-m-Y'))
-            ->add('created_at_formatted', fn(Pembelian $model) => Carbon::parse($model->created_at)->format('d-m-Y (h:i:s)'));
+            ->add('created_at_formatted', fn(Pembelian $model) => Carbon::parse($model->created_at)->setTimezone('Asia/Jakarta')->format('d-m-Y (h:i:s)'));
     }
 
     public function columns(): array
@@ -103,7 +103,8 @@ final class PembelianTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->sortable(),
+                ->sortable()
+                ->visibleInExport(false),
 
             Column::action('Action')
         ];

@@ -6,21 +6,6 @@
         <script src="{{ asset('js/charts-lines.js') }}" defer></script>
         <script src="{{ asset('js/charts-pie.js') }}" defer></script>
     @endpush
-    {{-- <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     @section('content')
         <div class="container px-6 mx-auto grid">
@@ -45,12 +30,12 @@
                 <!-- Card -->
                 <x-dashboard-card
                     svgPath="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-                    title="Total clients" value="6389" iconColor="orange">
+                    title="Total Penjualan" value="6389" iconColor="orange">
                 </x-dashboard-card>
 
                 <x-dashboard-card
                     svgPath="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                    title="Account balance" value="$ 46,760.89" iconColor="green">
+                    title="Saldo Tabungan" value="$ 46,760.89" iconColor="green">
                 </x-dashboard-card>
 
                 <x-dashboard-card
@@ -65,7 +50,7 @@
 
             </div>
 
-            <!-- New Table -->
+            {{-- <!-- New Table -->
             <div class="w-full overflow-hidden rounded-lg shadow-xs">
                 <div class="w-full overflow-x-auto">
                     <table class="w-full whitespace-no-wrap">
@@ -448,7 +433,7 @@
                         </nav>
                     </span>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Charts -->
             <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
