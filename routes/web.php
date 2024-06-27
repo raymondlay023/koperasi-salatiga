@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/pembelians', [PembelianController::class,'pembelianindex'])->name('pembelian.index');
     Route::post('/pembelian', [PembelianController::class, 'inputpembelian'])->name('pembelian.store');
-    Route::post('/pembelian/{id}', [PembelianController::class, 'destroy'])->name('pembelian.destroy');
+    Route::delete('/pembelian/{id}', [PembelianController::class, 'destroy'])->name('pembelian.destroy');
 });
 
 require __DIR__.'/auth.php';

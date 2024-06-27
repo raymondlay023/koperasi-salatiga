@@ -45,7 +45,15 @@ class PembelianController extends Controller
 
     public function destroy($id)
     {
-        Pembelian::find($id)->delete();
+        $pembelian = Pembelian::find($id);
+
+        // Revert inventory stock
+        $inventory = $pembelian->inventory;
+        $inventory->stock -= $pembelian->jumlah_barang;
+        $inventory->save();
+
+        $pembelian->delete();
+
         return redirect()->back()->with('success', 'Pembelian deleted successfully!');
     }
 
