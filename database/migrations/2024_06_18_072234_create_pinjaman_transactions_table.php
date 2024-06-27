@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('pinjaman_id');
             $table->integer('bayar');
             $table->string('remark')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
