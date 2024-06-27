@@ -72,8 +72,8 @@ final class PembelianTable extends PowerGridComponent
             ->add('harga_beli')
             ->add('supplier')
             ->add('status')
-            ->add('tanggal_beli_formatted', fn (Pembelian $model) => Carbon::parse($model->tanggal_beli)->format('d/m/Y'))
-            ->add('created_at_formatted', fn(Pembelian $model) => Carbon::parse($model->created_at)->format('d/M/Y (h:i:s)'));
+            ->add('tanggal_beli_formatted', fn (Pembelian $model) => Carbon::parse($model->tanggal_beli)->format('d-m-Y'))
+            ->add('created_at_formatted', fn(Pembelian $model) => Carbon::parse($model->created_at)->format('d-m-Y (h:i:s)'));
     }
 
     public function columns(): array

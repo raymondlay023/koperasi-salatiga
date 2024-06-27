@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('head')
+    <script src="{{ asset('js/focus-trap.js') }}"></script>
+@endpush
+
 @section('content')
     <div class="p-10">
         @include('partials.alert-success-error')
@@ -43,12 +47,12 @@
                 <div class="form-group mt-3">
                     <x-input-label for="jumlah_barang" :value="_('Jumlah Barang')"></x-input-label>
                     <x-text-input type="number" id="jumlah_barang" class="block mt-1 w-full" name="jumlah_barang"
-                        :value="old('jumlah_barang')" required min="0" value ="0" />
+                        :value="old('jumlah_barang')" required min="0" value="0" required />
                 </div>
                 <div class="form-group mt-3">
                     <x-input-label for="harga_beli" :value="_('Harga Beli')"></x-input-label>
                     <x-text-input type="number" id="harga_beli" class="block mt-1 w-full" name="harga_beli"
-                        :value="old('harga_beli')" required min="0" value ="0" />
+                        :value="old('harga_beli')" required min="0" value="0" required />
                 </div>
                 <div class="form-group mt-3">
                     <x-input-label for="supplier">Supplier</x-input-label>
@@ -69,8 +73,8 @@
                 </div>
             </form>
             <x-slot name="footer">
-                <x-primary-button onclick="document.getElementById('formCreatePembelian').submit()">
-                    <span>Submit</span> </x-primary-button>
+                <x-primary-button onclick="submitFormWithValidation()">
+                    Submit </x-primary-button>
             </x-slot>
         </x-custom-modal>
 
@@ -82,15 +86,19 @@
 
 @push('extraJs')
     <script>
+        function submitFormWithValidation() {
+            const form = document.getElementById('formCreatePembelian');
+            if (form.reportValidity()) {
+                form.submit();
+            }
+        }
         document.addEventListener('DOMContentLoaded', function() {
             const tipeBarangSelect = document.getElementById('tipe_barang');
             const itemSelect = document.getElementById('item_id');
             const inventoryData = @json($datas);
-            console.log(inventoryData);
 
             tipeBarangSelect.addEventListener('change', function() {
                 const selectedType = this.value;
-                console.log(selectedType);
                 updateItemDropdown(selectedType);
             });
 

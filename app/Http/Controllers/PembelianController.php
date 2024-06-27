@@ -40,7 +40,13 @@ class PembelianController extends Controller
         $inventory->stock += $request->jumlah_barang;
         $inventory->save();
 
-        return redirect()->route('inventory.pembelian.index')->with('success', 'Pembelian created successfully.');
+        return redirect()->back()->with('success', 'Pembelian created successfully!');
+    }
+
+    public function destroy($id)
+    {
+        Pembelian::find($id)->delete();
+        return redirect()->back()->with('success', 'Pembelian deleted successfully!');
     }
 
 }

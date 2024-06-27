@@ -44,10 +44,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/penjualans', [PenjualanController::class,'penjualanindex'])->name('penjualan.index');
     Route::post('/penjualan', [PenjualanController::class, 'inputpenjualan'])->name('penjualan.store');
     Route::put('/penjualan/{id}', [PenjualanController::class, 'update'])->name('penjualan.update');
-    Route::delete('/penjualan/{id}', [PenjualanController::class, 'de\stroy'])->name('penjualan.destroy');
+    Route::delete('/penjualan/{id}', [PenjualanController::class, 'destroy'])->name('penjualan.destroy');
 
     Route::get('/pembelians', [PembelianController::class,'pembelianindex'])->name('pembelian.index');
     Route::post('/pembelian', [PembelianController::class, 'inputpembelian'])->name('pembelian.store');
+    Route::post('/pembelian/{id}', [PembelianController::class, 'destroy'])->name('pembelian.destroy');
 });
 
 require __DIR__.'/auth.php';
