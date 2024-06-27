@@ -128,7 +128,7 @@ final class InventoryTable extends PowerGridComponent
     public function actionsFromView($row) : View
     {
         $types = ItemType::all();
-        return view('partials.inventory-actionv-view', ['row' => $row, 'types' => $types]);
+        return view('partials.inventory-action-view', ['row' => $row, 'types' => $types]);
     }
 
     // public function hydrate(): void
