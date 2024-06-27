@@ -9,7 +9,7 @@ use App\Http\Controllers\TabunganController;
 use Illuminate\Support\Facades\Route;
 
 
-use App\Http\Controllers\MemberController;
+use App\Http\Controllers\KoperasiMemberController;
 
 
 /*
@@ -49,15 +49,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/pembelians', [PembelianController::class,'pembelianindex'])->name('pembelian.index');
     Route::post('/pembelian', [PembelianController::class, 'inputpembelian'])->name('pembelian.store');
     Route::delete('/pembelian/{id}', [PembelianController::class, 'destroy'])->name('pembelian.destroy');
+
+    Route::get('/members', [KoperasiMemberController::class, 'index'])->name('member.index');
+    Route::get('/members/create', [KoperasiMemberController::class, 'create'] )->name('member.create');
+    Route::post('/members', [KoperasiMemberController::class, 'store'])->name('member.store');
+    Route::put('/member/{id}', [KoperasiMemberController::class, 'update'])->name('member.update');
+    Route::delete('/member/{id}', [KoperasiMemberController::class, 'destroy'])->name('member.destroy');
+
 });
 
 require __DIR__.'/auth.php';
 
-
-
-Route::get('/member/index', [MemberController::class, 'index'])->name('member.index');
-Route::post('/members/store', [MemberController::class, 'store'])->name('members.store');
-Route::get('/list/member-koperasi', [MemberController::class, 'listmember'] )->name('member.list');
 
 Route::get('/test/{id}', [InventoryController::class,'transaction']);
 

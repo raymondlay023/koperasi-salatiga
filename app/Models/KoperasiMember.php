@@ -15,7 +15,7 @@ class KoperasiMember extends Model
             'nama_anggota',
             'alamat_anggota',
             'handphone',
-            'tipe_member',
+            'type_id',
             'is_penabung',
             'is_peminjam',
     ];
@@ -28,5 +28,10 @@ class KoperasiMember extends Model
     public function TabunganRel()
     {
         return $this->hasMany(Tabungan::class, 'member_id');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(MemberType::class, 'type_id');
     }
 }

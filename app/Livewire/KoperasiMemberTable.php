@@ -2,13 +2,11 @@
 
 namespace App\Livewire;
 
-use App\Enums\TipeBarangEnum;
-use App\Models\Inventory;
-use App\Models\ItemType;
+use App\Models\KoperasiMember;
+use App\Models\MemberType;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
-use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
@@ -20,9 +18,11 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
-final class InventoryTable extends PowerGridComponent
+final class KoperasiMemberTable extends PowerGridComponent
 {
-    public int $itemTypeId = 0;
+    public int $typeId = 0;
+    public bool $deferLoading = true;
+    public string $loadingComponent = 'components.my-custom-loading';
 
     use WithExport;
 
@@ -32,6 +32,7 @@ final class InventoryTable extends PowerGridComponent
 
         return [
             Exportable::make('export')
+                ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
             Header::make()
                 ->showSearchInput()
@@ -45,14 +46,12 @@ final class InventoryTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Inventory::query()
-            ->when($this->itemTypeId,
-            fn($builder) => $builder->whereHas(
-                'item',
-                fn($builder) => $builder->where('item_type_id', $this->itemTypeId)
-            )
-            ->with(['type'])
-        );
+        return KoperasiMember::query()
+            ->when($this->typeId,
+                fn($builder) => $builder
+                    ->whereHas('type', fn($builder) => $builder->where('type_id', $this->typeId)
+                    )->with(['type'])
+            );
     }
 
     public function relationSearch(): array
@@ -60,7 +59,7 @@ final class InventoryTable extends PowerGridComponent
         return [
             'type' => [
                 'name',
-            ],
+            ]
         ];
     }
 
@@ -68,30 +67,45 @@ final class InventoryTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('item_name')
-            ->add('item_type', fn ($inventory) => e($inventory->type->name))
-            ->add('stock')
-            ->add('created_at_formatted', fn ($inventory) => Carbon::parse($inventory->created_at)->setTimezone('Asia/Jakarta')->format('d-m-Y (h:i:s)'));;
+            ->add('nama_anggota')
+            ->add('alamat_anggota')
+            ->add('handphone')
+            ->add('type_name', fn($model) => e($model->type->name))
+            ->add('is_penabung', fn($model) => $model->is_penabung === 1 ? 'Ya' : 'Tidak')
+            ->add('is_peminjam', fn($model) => $model->is_peminjam === 1 ? 'Ya' : 'Tidak')
+            ->add('created_at_formatted', fn ($model) => Carbon::parse($model->created_at)->setTimezone('Asia/Jakarta')->format('d-m-Y (h:i:s)'));
     }
 
     public function columns(): array
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Item name', 'item_name')
+            Column::make('Nama anggota', 'nama_anggota')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Tipe barang', 'item_type')
+            Column::make('Alamat anggota', 'alamat_anggota')
+                ->sortable()
                 ->searchable(),
 
-            Column::make('Stock', 'stock')
+            Column::make('Handphone', 'handphone')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('Tipe member', 'type_name')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('Penabung?', 'is_penabung')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('Peminjam?', 'is_peminjam')
                 ->sortable()
                 ->searchable(),
 
             Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->sortable()
-                ->visibleInExport(false),
+                ->sortable(),
 
             Column::action('Action')
         ];
@@ -100,38 +114,30 @@ final class InventoryTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::enumSelect('item_type', 'inventories.item_type_id')
-                ->dataSource(TipeBarangEnum::cases())
-                ->optionLabel('inventories.item_type_id'),
         ];
     }
 
-    // public function actions(Inventory $row): array
+    public function actionsFromView($row) : View
+    {
+        $types = MemberType::all();
+        return view('partials.koperasi-member-actions', ['row' => $row, 'types' => $types]);
+    }
+
+    // #[\Livewire\Attributes\On('edit')]
+    // public function edit($rowId): void
+    // {
+    //     $this->js('alert('.$rowId.')');
+    // }
+
+    // public function actions(KoperasiMember $row): array
     // {
     //     return [
     //         Button::add('edit')
     //             ->slot('Edit: '.$row->id)
-    //             ->id('edit-'.$row->id)
+    //             ->id()
     //             ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-    //             ->dispatch('clickToEdit', ['inventoryId' => $row->id]),
+    //             ->dispatch('edit', ['rowId' => $row->id])
     //     ];
-    // }
-
-    // #[On('clickToEdit')]
-    // public function clickToEdit(int $inventoryId): void
-    // {
-    //     $this->js("alert('Editing #{$inventoryId}')");
-    // }
-
-    public function actionsFromView($row) : View
-    {
-        $types = ItemType::all();
-        return view('partials.inventory-action-view', ['row' => $row, 'types' => $types]);
-    }
-
-    // public function hydrate(): void
-    // {
-    //     sleep(1);  // ⏳ Purposefully slow down the Component loading for demonstration purposes.
     // }
 
     /*
