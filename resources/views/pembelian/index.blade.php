@@ -5,8 +5,8 @@
 @endpush
 
 @section('content')
+    @include('partials.alert-success-error')
     <div class="p-10">
-        @include('partials.alert-success-error')
 
         <div class="justify-between flex">
             <div>

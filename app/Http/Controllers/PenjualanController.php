@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Inventory;
 use App\Models\ItemType;
-use App\Models\Pembelian;
 use App\Models\Penjualan;
 
 class PenjualanController extends Controller
@@ -44,7 +43,15 @@ class PenjualanController extends Controller
 
     public function destroy($id)
     {
-        Penjualan::find($id)->delete();
+        $penjualan = Penjualan::find($id);
+
+        // Revert inventory stock
+        $inventory = $penjualan->inventory;
+        $inventory->stock += $penjualan->jumlah_jual;
+        $inventory->save();
+
+        $penjualan->delete();
+
         return redirect()->back()->with('success', 'Penjualan deleted successfully!');
     }
 }

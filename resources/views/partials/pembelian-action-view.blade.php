@@ -9,7 +9,6 @@
 
     </button>
     <x-custom-modal id="delete-pembelian-modal-{{ $row->id }}" title="Are you sure want to delete this Pembelian?">
-        <!-- Modal 1 content goes here -->
         <form method="POST" action="{{ route('pembelian.destroy', $row->id) }}"
             id="formDeletePembelian{{ $row->id }}">
             @method('delete')
@@ -20,9 +19,6 @@
             <div class="form-group mt-2">
                 <x-input-label :value="_('Item')"></x-input-label>{{ $row->item_name }}
             </div>
-            {{-- <div id="stock_display" class="font-bold text-gray-700">
-                <!-- Stock information will be displayed here -->
-            </div> --}}
             <div class="form-group mt-2">
                 <x-input-label :value="_('Jumlah Jual')"></x-input-label>{{ $row->jumlah_jual }}
             </div>
@@ -40,7 +36,6 @@
             </div>
         </form>
         <x-slot name="footer">
-            <!-- Footer content goes here -->
             <button onclick="document.getElementById('formDeletePembelian{{ $row->id }}').submit()"
                 class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red">
                 Delete

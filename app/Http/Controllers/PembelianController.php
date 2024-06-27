@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Inventory;
 use App\Models\ItemType;
 use App\Models\Pembelian;
-use App\Models\Penjualan;
 
 
 class PembelianController extends Controller

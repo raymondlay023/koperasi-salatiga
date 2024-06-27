@@ -1,8 +1,12 @@
 @extends('layouts.app')
 
+@push('head')
+    <script src="{{ asset('js/focus-trap.js') }}"></script>
+@endpush
+
 @section('content')
+    @include('partials.alert-success-error')
     <div class="p-10">
-        @include('partials.alert-success-error')
 
         <div class="justify-between flex">
             <div>
@@ -71,51 +75,14 @@
                 </div>
             </form>
             <x-slot name="footer">
-                <!-- Footer content goes here -->
                 <x-primary-button onclick="document.getElementById('formCreatePenjualan').submit()">
                     <span>Submit</span> </x-primary-button>
             </x-slot>
         </x-custom-modal>
 
-        {{-- table below here --}}
         <div class="my-10">
             <livewire:penjualan-table />
         </div>
-
-        {{-- @if ($penjualan->isEmpty())
-            <p style="text-align: center;">No selling history available.</p>
-        @else
-            <table>
-                <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Jumlah Barang</th>
-                        <th>Harga Jual</th>
-                        <th>Customer</th>
-                        <th>Status</th>
-                        <th>Total Harga</th>
-                        <th>Tanggal Jual</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($penjualan as $selling)
-                        <tr>
-                            <td>{{ $selling->inventory->item_name }}</td>
-                            <td>{{ $selling->jumlah_jual }}</td>
-                            <td>{{ $selling->harga_jual }}</td>
-                            <td>{{ $selling->customer }}</td>
-                            <td>{{ $selling->status }}</td>
-                            @php
-                                $totalharga = $selling->jumlah_jual * $selling->harga_jual;
-                                $totalharga_idr = number_format($totalharga, 0, ',', '.');
-                            @endphp
-                            <td>Rp.{{ $totalharga_idr }}</td>
-                            <td>{{ $selling->tanggal_jual }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif --}}
     </div>
 @endsection
 

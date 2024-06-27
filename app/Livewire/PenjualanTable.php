@@ -73,8 +73,8 @@ final class PenjualanTable extends PowerGridComponent
             ->add('harga_jual')
             ->add('customer')
             ->add('status')
-            ->add('tanggal_jual_formatted', fn (Penjualan $model) => Carbon::parse($model->tanggal_jual)->format('d/m/Y'))
-            ->add('created_at_formatted', fn(Penjualan $model) => Carbon::parse($model->created_at)->format('d/m/Y h:i:s'));
+            ->add('tanggal_jual_formatted', fn (Penjualan $model) => Carbon::parse($model->tanggal_jual)->format('d-m-Y'))
+            ->add('created_at_formatted', fn(Penjualan $model) => Carbon::parse($model->created_at)->format('d-m-Y h:i:s'));
     }
 
     public function columns(): array
