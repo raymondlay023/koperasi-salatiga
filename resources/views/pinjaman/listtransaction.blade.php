@@ -1,116 +1,92 @@
 <x-app-layout>
     @section('content')
-
-
-        <style>
-            .no-data {
-                text-align: center;
-                color: #ff4d4d;
-                font-size: 1.2em;
-            }
-
-            .table-wrapper {
-                overflow-x: auto;
-                margin: 20px auto;
-                max-width: 100%;
-                background: #fff;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                border-radius: 5px;
-            }
-
-            .styled-table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-
-            .styled-table thead tr {
-                background-color: #009879;
-                color: #ffffff;
-                text-align: left;
-            }
-
-            .styled-table th,
-            .styled-table td {
-                padding: 12px 15px;
-            }
-
-            .styled-table tbody tr {
-                border-bottom: 1px solid #dddddd;
-            }
-
-            .styled-table tbody tr:nth-of-type(even) {
-                background-color: #f3f3f3;
-            }
-
-            .styled-table tbody tr:last-of-type {
-                border-bottom: 2px solid #009879;
-            }
-
-            .styled-table tbody tr:hover {
-                background-color: #f1f1f1;
-                cursor: pointer;
-            }
-
-            @media screen and (max-width: 600px) {
-                .styled-table thead {
-                    display: none;
-                }
-
-                .styled-table,
-                .styled-table tbody,
-                .styled-table tr,
-                .styled-table td {
-                    display: block;
-                    width: 100%;
-                }
-
-                .styled-table tr {
-                    margin-bottom: 15px;
-                }
-
-                .styled-table td {
-                    text-align: right;
-                    padding-left: 50%;
-                    position: relative;
-                }
-
-                .styled-table td::before {
-                    content: attr(data-label);
-                    position: absolute;
-                    left: 0;
-                    width: 50%;
-                    padding-left: 15px;
-                    font-weight: bold;
-                    text-align: left;
-                }
-            }
-        </style>
-        <a href="{{ route('pinjaman.index') }}" class="btn btn-primary"> Back to Index</a>
-        @if ($datas->isEmpty())
-            <p class="no-data">No transaction available.</p>
-        @else
-            <div class="table-wrapper">
-                <table class="styled-table">
-                    <thead>
-                        <tr>
-                            <th>Nama Anggota</th>
-                            <th>Jumlah Bayar</th>
-                            <th>Tanggal Bayar</th>
-                            <th>Deskripsi Tambahan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($datas as $data)
-                            <tr>
-                                <td>{{ $data->Pinjamanlist->memberpinjaman->nama_anggota }}</td>
-                                <td>{{ $data->bayar }}</td>
-                                <td>{{ $data->created_at }}</td>
-                                <td>{{ $data->remark }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <div class="p-10">
+            <div class="justify-between flex">
+                <div>
+                    <p>
+                        <a href="{{ route('pinjaman.index') }}" class="text-blue-800">
+                            Pinjaman
+                        </a>
+                        >
+                        <a href="{{ route('list.pinjaman.transaction') }}" class="text-blue-800">
+                            Pinjaman Transactions
+                        </a>
+                        >
+                        <span class="text-gray-500">List</span>
+                    </p>
+                    <p class="text-5xl font-bold">
+                        Pinjaman Transactions
+                    </p>
+                </div>
+                <div>
+                    <button @click="openModal('create-pinjaman-transaction-modal')"
+                        class="focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 mt-5 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-emerald-600 border border-transparent rounded-lg active:bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:shadow-blue-400">
+                        Create Pembayaran Pinjaman
+                    </button>
+                </div>
             </div>
-        @endif
+
+            <x-custom-modal id="create-pinjaman-transaction-modal" title="Pembayaran pinjaman">
+                <form action="{{ route('pinjaman.bayarproses') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <x-input-label for="pinjaman_id" :value="_('Choose Member')" />
+                        <x-select-input name="pinjaman_id" id="pinjaman_id" placeholder="Select Member">
+                            @foreach ($pinjamans->where('is_lunas', 0) as $pinjaman)
+                                <option value="{{ $pinjaman->id }}" data-bayar-perbulan="{{ $pinjaman->bayar_perbulan }}">
+                                    {{ $pinjaman->id }} - {{ $pinjaman->memberpinjaman->nama_anggota }}</option>
+                            @endforeach
+                        </x-select-input>
+                    </div>
+                    <div class="form-group mt-3">
+                        <x-input-label for="bayar" :value="_('Bayar (Rp)')" />
+                        <x-text-input type="text" name="bayar" id="bayar" placeholder="Enter amount in Rp"
+                            class="block w-full mt-1"></x-text-input>
+                    </div>
+                    <div class="form-group mt-3">
+                        <x-input-label for="remark" :value="_('Remark')" />
+                        <x-textarea placeholder="Catatan pembayaran" rows="5" />
+                    </div>
+                </form>
+                <x-slot name="footer">
+                    <x-primary-button onclick="submitFormWithValidation()">
+                        Process Payment </x-primary-button>
+                </x-slot>
+            </x-custom-modal>
+            <div class="py-10">
+                <livewire:pinjaman-transaction-table />
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('pinjaman_id').addEventListener('change', function() {
+                var selectedOption = this.options[this.selectedIndex];
+                var bayarPerbulan = selectedOption.getAttribute('data-bayar-perbulan');
+                console.log('ini berapa : ', bayarPerbulan);
+                document.getElementById('bayar').value = bayarPerbulan ? 'Rp ' + bayarPerbulan : '';
+            });
+            // Function to format input as Indonesian Rupiah
+            function formatRupiah(angka) {
+                var number_string = angka.toString().replace(/[^,\d]/g, ''),
+                    split = number_string.split(','),
+                    sisa = split[0].length % 3,
+                    rupiah = split[0].substr(0, sisa),
+                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+                return 'Rp ' + rupiah;
+            }
+
+            // On input change, format the input value
+            document.getElementById('bayar').addEventListener('input', function(e) {
+                var input = e.target.value;
+                e.target.value = formatRupiah(input);
+            });
+        </script>
     @endsection
 </x-app-layout>

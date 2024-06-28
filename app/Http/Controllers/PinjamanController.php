@@ -7,6 +7,7 @@ use App\Models\KoperasiMember;
 use App\Models\Pinjaman;
 use App\Models\PinjamanTransaction;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PinjamanController extends Controller
 {
@@ -56,18 +57,8 @@ class PinjamanController extends Controller
         return redirect()->route('pinjaman.index')->with('success', 'Pinjaman created successfully.');
     }
 
-    public function bayarpinjaman()
-    {
-        $pinjamans = Pinjaman::with('memberpinjaman')->get();
-        // dd($pinjamans);
-
-        return view('pinjaman.bayar', compact('pinjamans'));
-    }
-
     public function prosesbayar(Request $request)
     {
-        
-
         $request->validate([
             'pinjaman_id' => 'required|exists:pinjamans,id',
             'bayar' => 'required|string',
@@ -76,7 +67,7 @@ class PinjamanController extends Controller
 
         // Remove "Rp" prefix and formatting from 'bayar' value
         $bayar = str_replace(['Rp', '.', ' '], '', $request->input('bayar'));
-        
+
         PinjamanTransaction::create([
             'pinjaman_id' => $request->input('pinjaman_id'),
             'bayar' => $bayar,
@@ -88,7 +79,7 @@ class PinjamanController extends Controller
 
         if($pinjaman->tenor_counter === $pinjaman->tenor)
         {
-            $pinjaman->is_lunas = true; 
+            $pinjaman->is_lunas = true;
         }
 
         $pinjaman->save();
@@ -98,9 +89,25 @@ class PinjamanController extends Controller
 
     public function transactionlist()
     {
+        $pinjamans = Pinjaman::with('memberpinjaman')->get();
         $datas = PinjamanTransaction::with('Pinjamanlist', 'Pinjamanlist.memberpinjaman')->get();
         // dd($datas);
-        return view('pinjaman.listtransaction', compact('datas'));
+        return view('pinjaman.listtransaction', compact('datas', 'pinjamans'));
 
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $pinjaman = Pinjaman::findOrFail($id);
+            $pinjaman->delete();
+
+            return redirect()->back()->with('success', 'Pinjaman deleted sucessfully!');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            abort(404, 'Pinjaman not found!');
+        } catch (\Exception $e) {
+            Log::error('Error deleting record: '.$e->getMessage());
+            abort(500, 'An error occurred while deleting the record');
+        }
     }
 }

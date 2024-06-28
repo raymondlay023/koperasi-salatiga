@@ -3,14 +3,10 @@
 @endpush
 <x-app-layout>
     @section('content')
-        <div class="container p-10">
+        <div class="p-10">
 
-            <div class="justify-between flex">
+            <div class="justify-between items-center flex mb-6">
                 <div>
-                    <p>
-                        <a href="{{ route('inventory.stock') }}" class="text-blue-800"> Inventories </a> > <span
-                            class="text-gray-500">List</span>
-                    </p>
                     <p class="text-5xl font-bold">
                         Inventories
                     </p>

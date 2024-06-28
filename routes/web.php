@@ -56,23 +56,18 @@ Route::middleware('auth')->group(function () {
     Route::put('/member/{id}', [KoperasiMemberController::class, 'update'])->name('member.update');
     Route::delete('/member/{id}', [KoperasiMemberController::class, 'destroy'])->name('member.destroy');
 
+    Route::get('/pinjaman/index', [PinjamanController::class, 'index'])->name('pinjaman.index');
+    Route::post('/pinjaman/store', [PinjamanController::class, 'store'])->name('pinjaman.store');
+    Route::post('/pinjaman/bayar-proses', [PinjamanController::class, 'prosesbayar'])->name('pinjaman.bayarproses');
+    Route::get('/pinjaman/list-transaction', [PinjamanController::class, 'transactionlist'])->name('list.pinjaman.transaction');
+    Route::put('pinjaman/{id}', [PinjamanController::class, 'update'])->name('pinjaman.update');
+    Route::delete('pinjaman/{id}', [PinjamanController::class, 'destroy'])->name('pinjaman.destroy');
+    Route::delete('pinjaman-transactions/{id}', [PinjamanController::class, 'updatePinjamanTransaction'])->name('pinjaman.transaction.update');
 });
 
 require __DIR__.'/auth.php';
 
-
 Route::get('/test/{id}', [InventoryController::class,'transaction']);
-
-
-
-Route::get('/pinjaman/index', [PinjamanController::class, 'index'])->name('pinjaman.index');
-Route::post('/pinjaman/store', [PinjamanController::class, 'store'])->name('pinjaman.store');
-Route::get('/pinjaman/bayar', [PinjamanController::class, 'bayarpinjaman'])->name('pinjaman.bayar');
-Route::post('/pinjaman/bayar-proses', [PinjamanController::class, 'prosesbayar'])->name('pinjaman.bayarproses');
-Route::get('/pinjaman/list-transaction', [PinjamanController::class, 'transactionlist'])->name('list.pinjaman.transaction');
-
-
-
 
 Route::get('/tabungan/index', [TabunganController::class, 'index'])->name('tabungan.index');
 Route::post('/tabungan/store', [TabunganController::class, 'store'])->name('tabungan.store');

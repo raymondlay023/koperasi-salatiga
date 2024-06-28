@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\KoperasiMember;
-use App\Models\Pinjaman;
+use App\Models\PinjamanTransaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
@@ -18,11 +18,9 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
-final class PinjamanTable extends PowerGridComponent
+final class PinjamanTransactionTable extends PowerGridComponent
 {
     use WithExport;
-
-    public $memberId = 0;
 
     public function setUp(): array
     {
@@ -41,75 +39,37 @@ final class PinjamanTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Pinjaman::query()
-        ->when($this->memberId,
-            fn($builder) => $builder->whereHas(
-                'memberpinjaman',
-                fn($builder) => $builder->where('member_id', $this->memberId)
-            )
-            ->with(['memberpinjaman'])
-        );
+        return PinjamanTransaction::query();
     }
 
     public function relationSearch(): array
     {
-        return [
-            'memberpinjaman' => [
-                'nama_anggota',
-            ]
-        ];
+        return [];
     }
 
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('member_name', fn(Pinjaman $model) => $model->memberpinjaman->nama_anggota)
-            ->add('jumlah_pinjaman', fn(Pinjaman $model) => 'Rp ' . number_format($model->jumlah_pinjaman, 2, ',', '.'))
-            ->add('start_date_formatted', fn (Pinjaman $model) => Carbon::parse($model->start_date)->format('d/m/Y'))
-            ->add('end_date_formatted', fn (Pinjaman $model) => Carbon::parse($model->end_date)->format('d/m/Y'))
-            ->add('total_bayar', fn(Pinjaman $model) => 'Rp ' . number_format($model->total_bayar, 2, ',', '.'))
-            ->add('tenor')
-            ->add('bayar_perbulan', fn(Pinjaman $model) => 'Rp ' . number_format($model->bayar_perbulan, 2, ',', '.'))
-            ->add('is_lunas', fn(Pinjaman $model) => $model->is_lunas ? 'Lunas' : 'Belum Lunas')
-            ->add('tenor_counter', fn(Pinjaman $model) => $model->tenor_counter == null ? 'Belum ada pembayaran' : $model->tenor_counter)
-            ->add('created_at_formatted', fn (Pinjaman $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('pinjaman_id')
+            ->add('bayar')
+            ->add('remark')
+            ->add('created_at_formatted', fn (PinjamanTransaction $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
     public function columns(): array
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Nama Anggota', 'member_name')
-                ->searchable(),
-
-            Column::make('Jumlah pinjaman', 'jumlah_pinjaman')
+            Column::make('Pinjaman id', 'pinjaman_id')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Start date', 'start_date_formatted', 'start_date')
-                ->sortable(),
-
-            Column::make('End date', 'end_date_formatted', 'end_date')
-                ->sortable(),
-
-            Column::make('Total bayar', 'total_bayar')
+            Column::make('Bayar', 'bayar')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Tenor', 'tenor')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Bayar perbulan', 'bayar_perbulan')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Status', 'is_lunas')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Tenor counter', 'tenor_counter')
+            Column::make('Remark', 'remark')
                 ->sortable()
                 ->searchable(),
 
@@ -123,15 +83,13 @@ final class PinjamanTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::datepicker('start_date'),
-            Filter::datepicker('end_date'),
         ];
     }
 
     public function actionsFromView($row) : View
     {
         $members = KoperasiMember::all();
-        return view('partials.pinjaman-action-view', ['row' => $row, 'members' => $members]);
+        return view('partials.pinjaman-transaction-action-view', ['row' => $row, 'members' => $members]);
     }
 
     // #[\Livewire\Attributes\On('edit')]
@@ -140,7 +98,7 @@ final class PinjamanTable extends PowerGridComponent
     //     $this->js('alert('.$rowId.')');
     // }
 
-    // public function actions(Pinjaman $row): array
+    // public function actions(PinjamanTransaction $row): array
     // {
     //     return [
     //         Button::add('edit')

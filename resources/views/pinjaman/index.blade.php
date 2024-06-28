@@ -1,83 +1,86 @@
 <x-app-layout>
     @section('content')
-        <h1>Pinjaman List</h1>
-        <a href="{{ route('pinjaman.bayar') }}" class="btn btn-primary">Bayar Pinjaman</a>
-        <a href="{{ route('list.pinjaman.transaction') }}" class="btn btn-primary">Transaksi Pinjaman</a>
-
-        <form method="POST" action="{{ route('pinjaman.store') }}">
-            @csrf
-            <div class="form-group">
-                <label for="member_id">Member ID:</label>
-                <select class="form-control" id="member_id" name="member_id" required>
-                    <option value="">Select Member</option>
-                    @foreach ($members as $member)
-                        <option value="{{ $member->id }}">{{ $member->nama_anggota }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="jumlah_pinjaman">Jumlah Pinjaman:</label>
-                <input type="text" class="form-control" id="jumlah_pinjaman" name="jumlah_pinjaman" required>
-            </div>
-            <div class="form-group">
-                <label for="start_date">Start Date:</label>
-                <input type="date" class="form-control" id="start_date" name="start_date" required>
-            </div>
-            <div class="form-group">
-                <label for="tenor">Tenor:</label>
-                <select class="form-control" id="tenor" name="tenor" required>
-                    <option value="10">10</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="total_bayar">Total Bayar:</label>
-                <input type="text" class="form-control" id="total_bayar" name="total_bayar" readonly>
-            </div>
-            <div class="form-group">
-                <label for="bayar_perbulan">Bayar Perbulan:</label>
-                <input type="text" class="form-control" id="bayar_perbulan" name="bayar_perbulan" readonly>
+        @include('partials.alert-success-error')
+        <div class="p-10">
+            <div class="justify-between flex">
+                <div>
+                    <p>
+                        <a href="{{ route('pinjaman.index') }}" class="text-blue-800"> Pinjaman </a> > <span
+                            class="text-gray-500">List</span>
+                    </p>
+                    <p class="text-5xl font-bold">
+                        Pinjaman List
+                    </p>
+                </div>
+                <div>
+                    <a href="{{ route('list.pinjaman.transaction') }}"
+                        class="mx-2 px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 text-sm font-medium text-emerald-600 hover:text-white transition-colors duration-150 bg-transparent border border-emerald-600 rounded-lg active:bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:shadow-emerald-400">Transaksi
+                        Pinjaman</a>
+                    <button @click="openModal('create-pinjaman-modal')"
+                        class="focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 mt-5 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-emerald-600 border border-transparent rounded-lg active:bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:shadow-emerald-400">
+                        Create Pinjaman
+                    </button>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+            <x-custom-modal id="create-pinjaman-modal" title="Create Pinjaman">
+                <form method="POST" action="{{ route('pinjaman.store') }}" id="formCreatePinjaman">
+                    @csrf
+                    <div class="form-group">
+                        <x-input-label for="member_id" :value="_('Member ID')"></x-input-label>
+                        <x-select-input id="member_id" name="member_id" placeholder="Select member" required>
+                            @foreach ($members as $member)
+                                <option value="{{ $member->id }}">{{ $member->nama_anggota }}</option>
+                            @endforeach
+                        </x-select-input>
+                    </div>
+                    <div class="form-group mt-4">
+                        <x-input-label for="jumlah_pinjaman" :value="_('Jumlah Pinjaman')"></x-input-label>
+                        <x-text-input class="block mt-1 w-full" type="text" id="jumlah_pinjaman" name="jumlah_pinjaman"
+                            required></x-text-input>
+                    </div>
+                    <div class="form-group mt-4">
+                        <x-input-label for="start_date" :value="_('Start Date')"></x-input-label>
+                        <x-text-input class="block mt-1 w-full" type="date" id="start_date" name="start_date"
+                            required></x-text-input>
+                    </div>
+                    <div class="form-group mt-4">
+                        <x-input-label for="tenor" :value="_('Tenor')"></x-input-label>
+                        <x-select-input id="tenor" name="tenor" required>
+                            <option value="10">10</option>
+                        </x-select-input>
+                    </div>
+                    <div class="form-group mt-4">
+                        <x-input-label for="total_bayar" :value="_('Total Bayar')"></x-input-label>
+                        <x-text-input class="bg-slate-100 block mt-1 w-full" type="text" id="total_bayar"
+                            name="total_bayar" readonly></x-text-input>
+                    </div>
+                    <div class="form-group mt-4">
+                        <x-input-label for="bayar_perbulan" :value="_('Bayar Perbulan')"></x-input-label>
+                        <x-text-input class="bg-slate-100 block mt-1 w-full" type="text" id="bayar_perbulan"
+                            name="bayar_perbulan" readonly></x-text-input>
+                    </div>
+                </form>
+                <x-slot name="footer">
+                    <x-primary-button onclick="submitFormWithValidation()">
+                        Submit </x-primary-button>
+                </x-slot>
+            </x-custom-modal>
 
-        @if ($pinjamans->isEmpty())
-            <p style="text-align: center;">No Pinjamans available.</p>
-        @else
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nama Anggota</th>
-                        <th>Jumlah Pinjaman</th>
-                        <th>Start Date</th>
-                        <th>Tenor</th>
-                        <th>Total Bayar</th>
-                        <th>Bayar Perbulan</th>
-                        <th>Jumlah Sudah Bayar</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($pinjamans as $pinjaman)
-                        <tr>
-                            <td>{{ $pinjaman->memberpinjaman->nama_anggota }}</td>
-                            <td>{{ number_format($pinjaman->jumlah_pinjaman, 0, ',', '.') }}</td>
-                            <td>{{ $pinjaman->start_date }}</td>
-                            <td>{{ $pinjaman->tenor }}</td>
-                            <td>{{ number_format($pinjaman->total_bayar, 0, ',', '.') }}</td>
-                            <td>{{ number_format($pinjaman->bayar_perbulan, 0, ',', '.') }}</td>
-                            <td>{{ $pinjaman->tenor_counter == null ? 'Belum ada pembayaran' : $pinjaman->tenor_counter }}
-                            </td>
-                            <td>{{ $pinjaman->is_lunas ? 'Lunas' : 'Belum Lunas' }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-
-        <livewire:pinjaman-table />
-
+            <div class="my-10">
+                <livewire:pinjaman-table />
+            </div>
+        </div>
+    @endsection
+    @push('extraJs')
         <script>
+            function submitFormWithValidation() {
+                const form = document.getElementById('formCreatePinjaman');
+                if (form.reportValidity()) {
+                    form.submit();
+                }
+            }
+
             document.addEventListener('DOMContentLoaded', function() {
                 const jumlahPinjamanInput = document.getElementById('jumlah_pinjaman');
                 const tenorSelect = document.getElementById('tenor');
@@ -117,5 +120,5 @@
                 tenorSelect.addEventListener('change', calculateValues);
             });
         </script>
-    @endsection
+    @endpush
 </x-app-layout>
