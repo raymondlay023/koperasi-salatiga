@@ -100,11 +100,34 @@ class PinjamanController extends Controller
     {
         try {
             $pinjaman = Pinjaman::findOrFail($id);
-            $pinjaman->delete();
 
+            try {
+                $pinjamanTransactions = PinjamanTransaction::where('pinjaman_id', $pinjaman->id);
+                $pinjamanTransactions->delete();
+            } catch (\Exception $e) {
+                Log::error('Error deleting Pinjaman transactions: ' . $e->getMessage());
+                abort(500, 'An error occurred while deleting the Pinjaman transactions');
+            }
+
+            $pinjaman->delete();
             return redirect()->back()->with('success', 'Pinjaman deleted sucessfully!');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             abort(404, 'Pinjaman not found!');
+        } catch (\Exception $e) {
+            Log::error('Error deleting record: '.$e->getMessage());
+            abort(500, 'An error occurred while deleting the record');
+        }
+    }
+
+    public function destroyPinjamanTransaction($id)
+    {
+        try {
+            $pinjamanTransaction = PinjamanTransaction::findOrFail($id);
+            $pinjamanTransaction->delete();
+
+            return redirect()->back()->with('success', '');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            abort(404, 'Pinjaman Transaction not found!');
         } catch (\Exception $e) {
             Log::error('Error deleting record: '.$e->getMessage());
             abort(500, 'An error occurred while deleting the record');

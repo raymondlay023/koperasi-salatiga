@@ -1,7 +1,7 @@
 <x-app-layout>
     @section('content')
         @include('partials.alert-success-error')
-        <div class="p-10">
+        <div class="pt-10 ps-10 container">
             <div class="justify-between flex">
                 <div>
                     <p>

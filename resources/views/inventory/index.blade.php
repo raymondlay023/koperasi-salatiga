@@ -3,7 +3,7 @@
 @endpush
 <x-app-layout>
     @section('content')
-        <div class="p-10">
+        <div class="pt-10 ps-10 container">
 
             <div class="justify-between items-center flex mb-6">
                 <div>

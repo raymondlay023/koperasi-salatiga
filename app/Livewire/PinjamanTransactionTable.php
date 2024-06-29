@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Models\KoperasiMember;
+use App\Models\Pinjaman;
 use App\Models\PinjamanTransaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -52,7 +52,8 @@ final class PinjamanTransactionTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('pinjaman_id')
-            ->add('bayar')
+            ->add('peminjam', fn(PinjamanTransaction $model) => $model->Pinjamanlist->memberpinjaman->nama_anggota)
+            ->add('bayar', fn(PinjamanTransaction $model) => 'Rp ' . number_format($model->bayar, 2, ',', '.'))
             ->add('remark')
             ->add('created_at_formatted', fn (PinjamanTransaction $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
@@ -61,7 +62,7 @@ final class PinjamanTransactionTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Pinjaman id', 'pinjaman_id')
+            Column::make('Peminjam', 'peminjam')
                 ->sortable()
                 ->searchable(),
 
@@ -88,8 +89,8 @@ final class PinjamanTransactionTable extends PowerGridComponent
 
     public function actionsFromView($row) : View
     {
-        $members = KoperasiMember::all();
-        return view('partials.pinjaman-transaction-action-view', ['row' => $row, 'members' => $members]);
+        $pinjamans = Pinjaman::with('memberpinjaman')->get();
+        return view('partials.pinjaman-transaction-action-view', ['row' => $row, 'pinjamans' => $pinjamans]);
     }
 
     // #[\Livewire\Attributes\On('edit')]

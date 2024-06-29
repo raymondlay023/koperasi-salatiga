@@ -1,6 +1,6 @@
 <x-app-layout>
     @section('content')
-        <div class="p-10">
+        <div class="pt-10 ps-10 container">
             <div class="justify-between flex">
                 <div>
                     <p>
@@ -27,7 +27,7 @@
             </div>
 
             <x-custom-modal id="create-pinjaman-transaction-modal" title="Pembayaran pinjaman">
-                <form action="{{ route('pinjaman.bayarproses') }}" method="POST">
+                <form action="{{ route('pinjaman.bayarproses') }}" method="POST" id="formCreateTransaction">
                     @csrf
                     <div class="form-group">
                         <x-input-label for="pinjaman_id" :value="_('Choose Member')" />
@@ -45,7 +45,7 @@
                     </div>
                     <div class="form-group mt-3">
                         <x-input-label for="remark" :value="_('Remark')" />
-                        <x-textarea placeholder="Catatan pembayaran" rows="5" />
+                        <x-textarea id="remark" name="remark" placeholder="Catatan pembayaran" rows="5" />
                     </div>
                 </form>
                 <x-slot name="footer">
@@ -59,6 +59,12 @@
         </div>
 
         <script>
+            function submitFormWithValidation() {
+                const form = document.getElementById('formCreateTransaction');
+                if (form.reportValidity()) {
+                    form.submit();
+                }
+            }
             document.getElementById('pinjaman_id').addEventListener('change', function() {
                 var selectedOption = this.options[this.selectedIndex];
                 var bayarPerbulan = selectedOption.getAttribute('data-bayar-perbulan');
