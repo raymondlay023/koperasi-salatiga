@@ -13,6 +13,7 @@ class TabunganTransaction extends Model
 
         'tabungan_id',
         'setor',
+        'tarikan',
         'setor_date',
         'remark',
     ];

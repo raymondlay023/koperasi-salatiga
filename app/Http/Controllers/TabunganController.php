@@ -57,29 +57,45 @@ class TabunganController extends Controller
 
     public function setorinsert(Request $request)
     {
-        // dd($request->all());
+          // Validate the incoming request
+    $validatedData = $request->validate([
+        'tabungan_id' => 'required',    
+        'setor' => 'nullable|numeric|min:0|exclude_if:tarikan,0',
+        'tarikan' => 'nullable|numeric|min:0|exclude_if:setor,0',
+        'setor_date' => 'required|date',
+        'remark' => 'nullable|string|max:255',
+    ]);
 
-        $validatedData = $request->validate([
-            'tabungan_id' => 'required',    
-            'setor' => 'required|numeric|min:0',
-            'setor_date' => 'required|date',
-            'remark' => 'nullable|string|max:255',
-        ]);
+    // Determine whether the request is for "setor" or "tarikan"
+    $isSetor = isset($validatedData['setor']) && $validatedData['setor'] > 0;
+    $isTarikan = isset($validatedData['tarikan']) && $validatedData['tarikan'] > 0;
 
-        // Insert data into TabunganTransaction
-        $transaction = TabunganTransaction::create([
-            'tabungan_id' => $validatedData['tabungan_id'],
-            'setor' => $validatedData['setor'],
-            'setor_date' => $validatedData['setor_date'],
-            'remark' => $validatedData['remark'],
-        ]);
+    // Ensure either "setor" or "tarikan" is provided
+    if (!$isSetor && !$isTarikan) {
+        return back()->withErrors(['message' => 'Either Setor or Tarikan must be provided.']);
+    }
 
-        $tabungan = Tabungan::where('id', $validatedData['tabungan_id'])->firstOrFail();
+    // Insert data into TabunganTransaction
+    $transaction = TabunganTransaction::create([
+        'tabungan_id' => $validatedData['tabungan_id'],
+        'setor' => $isSetor ? $validatedData['setor'] : null,
+        'tarikan' => $isTarikan ? $validatedData['tarikan'] : null,
+        'setor_date' => $validatedData['setor_date'],
+        'remark' => $validatedData['remark'],
+    ]);
 
+    // Retrieve the related Tabungan record
+    $tabungan = Tabungan::where('id', $validatedData['tabungan_id'])->firstOrFail();
+
+    // Update the saldo based on the transaction type
+    if ($isSetor) {
         $tabungan->saldo += $validatedData['setor'];
-        $tabungan->save();
+    } else if ($isTarikan) {
+        $tabungan->saldo -= $validatedData['tarikan'];
+    }
+    $tabungan->save();
 
-        return redirect()->route('tabungan.index')->with('success', 'Setoran berhasil ditambahkan dan saldo diperbarui.');
+    return redirect()->route('tabungan.index')->with('success', 'Transaksi berhasil ditambahkan dan saldo diperbarui.');
     }
 
     public function listtransaction()
@@ -87,5 +103,40 @@ class TabunganController extends Controller
         $datas = TabunganTransaction::with('Tabunganlist', 'Tabunganlist.membertabungan')->get();
         // dd($datas);    
         return view('tabungan.listtransaction', compact('datas'));
+    }
+
+    public function indexlaporan()
+    {
+        return view('tabungan.laporanindex');
+    }
+
+    public function laporantabungan(Request $request)
+    {
+        
+        $startdate = $request->start_date;
+        $enddate = $request->end_date;
+        $datas = TabunganTransaction::whereBetween('setor_date', [$startdate, $enddate])->get();
+        // dd($datas);
+
+        $result = [];
+
+        foreach ($datas as $data) {
+            $date = $data->setor_date;
+
+            // Initialize the array structure if not already done
+            if (!isset($result[$date])) {
+                $result[$date] = [
+                    'setor' => 0,
+                    'tarikan' => 0,
+                ];
+            }
+
+            // Add the setor and tarikan amounts to the respective date
+            $result[$date]['setor'] += $data->setor ?? 0;
+            $result[$date]['tarikan'] += $data->tarikan ?? 0;
+        }
+
+        return view('tabungan.laporantabungan', compact('result', 'startdate', 'enddate'));
+
     }
 }

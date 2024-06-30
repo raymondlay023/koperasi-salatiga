@@ -90,7 +90,8 @@
                         <th>Nama Anggota</th>
                         <th>Jenis Tabungan</th>
                         <th>Jumlah Setor</th>
-                        <th>Tanggal Setor</th>
+                        <th>Jumlah Tarikan</th>
+                        <th>Tanggal Transaksi</th>
                         <th>Deskripsi Tambahan</th>
                     </tr>
                 </thead>
@@ -100,6 +101,7 @@
                             <td>{{ $data->Tabunganlist->membertabungan->nama_anggota }}</td>
                             <td>{{ str_replace('_', ' ', $data->Tabunganlist->status) }}</td>
                             <td>{{ $data->setor }}</td>
+                            <td>{{ $data->tarikan }}</td>
                             <td>{{ $data->setor_date }}</td>
                             <td>{{ $data->remark }}</td>
                         </tr>

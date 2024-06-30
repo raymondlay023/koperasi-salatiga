@@ -63,6 +63,16 @@ Route::middleware('auth')->group(function () {
     Route::put('pinjaman/{id}', [PinjamanController::class, 'update'])->name('pinjaman.update');
     Route::delete('pinjaman/{id}', [PinjamanController::class, 'destroy'])->name('pinjaman.destroy');
     Route::delete('pinjaman-transactions/{id}', [PinjamanController::class, 'updatePinjamanTransaction'])->name('pinjaman.transaction.update');
+
+    Route::get('/laporanpinjaman/index', [PinjamanController::class, 'indexlaporan'])->name('laporanpinjamanindex');
+    Route::get('/laporanpinjaman/result', [PinjamanController::class, 'laporanpinjaman'])->name('result.laporanpinjaman');
+
+    Route::get('/laporan',[InventoryController::class, 'laporan'])->name('laporan.view');
+    Route::get('/laporan/result',[InventoryController::class, 'hasillaporanpinjaman'])->name('result.laporan');
+
+    Route::get('/laporan/sembako',[InventoryController::class, 'laporansembako'])->name('laporan.sembako');
+    Route::get('/laporan/kedelai',[InventoryController::class, 'laporankedelai'])->name('laporan.kedelai');
+    Route::get('/laporan/tahutempe',[InventoryController::class, 'laporantahutempe'])->name('laporan.tahu_tempe');
 });
 
 require __DIR__.'/auth.php';
@@ -75,3 +85,6 @@ Route::get('/tabungan/store/page', [TabunganController::class, 'setortabungan'])
 Route::post('/tabungan/store/insert', [TabunganController::class, 'setorinsert'])->name('tabungan.insert');
 
 Route::get('/list/transaction/tabungan',[TabunganController::class, 'listtransaction'])->name('list.transaksi.tabungan');
+
+Route::get('/laporantabungan/index',[TabunganController::class, 'indexlaporan'])->name('laporantabunganindex');
+Route::get('/laporantabungan/result',[TabunganController::class, 'laporantabungan'])->name('result.laporantabungan');
