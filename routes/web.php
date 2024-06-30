@@ -58,11 +58,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/pinjaman/index', [PinjamanController::class, 'index'])->name('pinjaman.index');
     Route::post('/pinjaman/store', [PinjamanController::class, 'store'])->name('pinjaman.store');
+    // Route::put('pinjaman/{id}', [PinjamanController::class, 'update'])->name('pinjaman.update');
+    Route::delete('pinjaman/{id}', [PinjamanController::class, 'destroy'])->name('pinjaman.destroy');
     Route::post('/pinjaman/bayar-proses', [PinjamanController::class, 'prosesbayar'])->name('pinjaman.bayarproses');
     Route::get('/pinjaman/list-transaction', [PinjamanController::class, 'transactionlist'])->name('list.pinjaman.transaction');
-    Route::put('pinjaman/{id}', [PinjamanController::class, 'update'])->name('pinjaman.update');
-    Route::delete('pinjaman/{id}', [PinjamanController::class, 'destroy'])->name('pinjaman.destroy');
-    Route::delete('pinjaman-transactions/{id}', [PinjamanController::class, 'updatePinjamanTransaction'])->name('pinjaman.transaction.update');
+    // Route::put('pinjaman-transactions/{id}', [PinjamanController::class, 'updatePinjamanTransaction'])->name('pinjaman.transaction.update');
+    Route::put('pinjaman-transactions/{id}', [PinjamanController::class, 'destroyPinjamanTransaction'])->name('pinjaman.transaction.destroy');
 
     Route::get('/laporanpinjaman/index', [PinjamanController::class, 'indexlaporan'])->name('laporanpinjamanindex');
     Route::get('/laporanpinjaman/result', [PinjamanController::class, 'laporanpinjaman'])->name('result.laporanpinjaman');
