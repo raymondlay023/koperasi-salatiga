@@ -7,6 +7,7 @@ use App\Models\Inventory;
 use App\Models\ItemType;
 use App\Models\Pembelian;
 use App\Models\Penjualan;
+use App\Rules\UniqueIgnoringCaseAndSubstring;
 
 
 class InventoryController extends Controller
@@ -22,7 +23,7 @@ class InventoryController extends Controller
     {
         // Validate the request data
         $validatedData = $request->validate([
-            'item_name' => 'required|string',
+            'item_name' => ['required', 'string', 'max:255', new UniqueIgnoringCaseAndSubstring],
             'item_type_id' => 'required|integer',
             'stock' => 'required|integer',
         ]);
@@ -80,4 +81,154 @@ class InventoryController extends Controller
         return redirect()->back()->with('success', 'Inventory successfully deleted!');
     }
 
+    public function laporan()
+    {
+        return view('inventory.laporan');
+    }
+
+    public function hasillaporanpinjaman(Request $request)
+    {
+        
+        $request->validate([
+            'category' => 'required|in:1,2,3',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $itemtypeid = $request->category;
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+
+        switch ($itemtypeid) {
+            case 1:
+                return redirect()->route('laporan.sembako')
+                                 ->with(['itemtypeid' => $itemtypeid,'start_date' => $startDate, 'end_date' => $endDate]);
+            case 2:
+                return redirect()->route('laporan.kedelai')
+                                 ->with(['itemtypeid' => $itemtypeid,'start_date' => $startDate, 'end_date' => $endDate]);
+            case 3:
+                return redirect()->route('laporan.tahu_tempe')
+                                 ->with(['itemtypeid' => $itemtypeid,'start_date' => $startDate, 'end_date' => $endDate]);
+            default:
+                return redirect()->back()->withErrors(['category' => 'Invalid category selected.']);
+        }
+    }
+
+    public function laporansembako(Request $request)
+    {
+        $itemtypeid = $request->session()->get('itemtypeid');
+        $startDate = $request->session()->get('start_date');
+        $endDate = $request->session()->get('end_date');
+        $data = Inventory::where('item_type_id', $itemtypeid)
+            ->with(['pembelian' => function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('tanggal_beli', [$startDate, $endDate]);
+            }, 'penjualan' => function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('tanggal_jual', [$startDate, $endDate]);
+            }])
+            ->get();
+
+    // dd($data);
+        
+    $result = [];
+
+    foreach ($data as $inventory) {
+        $item = [
+            'category' => $inventory->item_name,
+            'pembelian' => [
+                'totalquantity' => $inventory->pembelian->sum('jumlah_barang'),
+                'totalprice' => $inventory->pembelian->sum(function ($pembelian) {
+                    return $pembelian->harga_beli * $pembelian->jumlah_barang;
+                })
+            ],
+            'penjualan' => [
+                'totalquantity' => $inventory->penjualan->sum('jumlah_jual'),
+                'totalprice' => $inventory->penjualan->sum(function ($penjualan) {
+                    return $penjualan->harga_jual * $penjualan->jumlah_jual;
+                })
+            ]
+        ];
+        $result[] = $item;
+    }
+
+    return view('inventory.laporansembako', compact('result', 'startDate', 'endDate'));
+        
+    }
+
+    public function laporankedelai(Request $request)
+    {
+        $itemtypeid = $request->session()->get('itemtypeid');
+        $startDate = $request->session()->get('start_date');
+        $endDate = $request->session()->get('end_date');
+        
+        $data = Inventory::where('item_type_id', $itemtypeid)
+        ->with(['pembelian' => function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('tanggal_beli', [$startDate, $endDate]);
+        }, 'penjualan' => function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('tanggal_jual', [$startDate, $endDate]);
+        }])
+        ->get();
+
+        $result = [];
+
+        foreach ($data as $inventory) {
+            $item = [
+                'category' => $inventory->item_name,
+                'pembelian' => [
+                    'totalquantity' => $inventory->pembelian->sum('jumlah_barang'),
+                    'totalprice' => $inventory->pembelian->sum(function ($pembelian) {
+                        return $pembelian->harga_beli * $pembelian->jumlah_barang;
+                    })
+                ],
+                'penjualan' => [
+                    'totalquantity' => $inventory->penjualan->sum('jumlah_jual'),
+                    'totalprice' => $inventory->penjualan->sum(function ($penjualan) {
+                        return $penjualan->harga_jual * $penjualan->jumlah_jual;
+                    })
+                ]
+            ];
+            $result[] = $item;
+        }
+
+        return view('inventory.laporankedelai', compact('result', 'startDate', 'endDate'));
+
+    }
+
+    public function laporantahutempe(Request $request)
+    {
+        $itemtypeid = $request->session()->get('itemtypeid');
+        $startDate = $request->session()->get('start_date');
+        $endDate = $request->session()->get('end_date');
+
+        $data = Inventory::where('item_type_id', $itemtypeid)
+        ->with(['pembelian' => function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('tanggal_beli', [$startDate, $endDate]);
+        }, 'penjualan' => function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('tanggal_jual', [$startDate, $endDate]);
+        }])
+        ->get();
+
+        $result = [];
+
+        foreach ($data as $inventory) {
+            $item = [
+                'category' => $inventory->item_name,
+                'pembelian' => [
+                    'totalquantity' => $inventory->pembelian->sum('jumlah_barang'),
+                    'totalprice' => $inventory->pembelian->sum(function ($pembelian) {
+                        return $pembelian->harga_beli * $pembelian->jumlah_barang;
+                    })
+                ],
+                'penjualan' => [
+                    'totalquantity' => $inventory->penjualan->sum('jumlah_jual'),
+                    'totalprice' => $inventory->penjualan->sum(function ($penjualan) {
+                        return $penjualan->harga_jual * $penjualan->jumlah_jual;
+                    })
+                ]
+            ];
+            $result[] = $item;
+        }
+
+        return view('inventory.laporantahutempe', compact('result', 'startDate', 'endDate'));
+
+    }
 }

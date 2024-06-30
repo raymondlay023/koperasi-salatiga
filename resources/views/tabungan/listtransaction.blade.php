@@ -71,6 +71,7 @@
             </div>
             <div class="py-10">
                 <livewire:tabungan-transaction-table />
+                {{-- Add Jumlah Tarikan and Tanggal Transaksi Column from $model->tarikan field --}}
             </div>
         </div>
     @endsection

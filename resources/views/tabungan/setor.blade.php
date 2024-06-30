@@ -41,6 +41,11 @@
         </div>
 
         <div class="form-group">
+            <label for="tarikan">Jumlah Tarikan:</label>
+            <input type="number" name="tarikan" id="tarikan" class="form-control" required>
+        </div>
+
+        <div class="form-group">
             <label for="setor_date">Tanggal Setor :</label>
             <input type="date" name="setor_date" id="setor_date" class="form-control" required>
         </div>
@@ -70,6 +75,27 @@
             $('#tabungan_id').val('');
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+            const setorInput = document.getElementById('setor');
+            const tarikanInput = document.getElementById('tarikan');
+
+            setorInput.addEventListener('input', function () {
+                if (setorInput.value) {
+                    tarikanInput.disabled = true;
+                } else {
+                    tarikanInput.disabled = false;
+                }
+            });
+
+            tarikanInput.addEventListener('input', function () {
+                if (tarikanInput.value) {
+                    setorInput.disabled = true;
+                } else {
+                    setorInput.disabled = false;
+                }
+            });
+        });
 </script>
 
 

@@ -26,4 +26,9 @@ class Pinjaman extends Model
     {
         return $this->belongsTo(KoperasiMember::class, 'member_id');
     }
+
+    public function pinjamantransaksi()
+    {
+        return $this->hasMany(PinjamanTransaction::class, 'pinjaman_id');
+    }
 }

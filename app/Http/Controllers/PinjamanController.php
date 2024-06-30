@@ -8,6 +8,7 @@ use App\Models\Pinjaman;
 use App\Models\PinjamanTransaction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use DB;
 
 class PinjamanController extends Controller
 {
@@ -133,4 +134,48 @@ class PinjamanController extends Controller
             abort(500, 'An error occurred while deleting the record');
         }
     }
+
+    public function indexlaporan()
+    {
+        return view('pinjaman.laporanindex');
+    }
+
+    public function laporanpinjaman(Request $request)
+    {
+        // dd($request->all());
+        $startdate = $request->start_date;
+        $enddate = $request->end_date;
+
+        $transactions = PinjamanTransaction::whereBetween(DB::raw('DATE(created_at)'), [$startdate, $enddate])->get();
+
+        // Mengambil pinjaman yang memiliki start_date antara startdate dan enddate
+        $pinjaman = Pinjaman::whereBetween('start_date', [$startdate, $enddate])->get();
+
+
+         // Menginisialisasi array untuk menyimpan hasil
+         $combinedSummary = [];
+
+         // Mengelompokkan transaksi berdasarkan tanggal dan menghitung total bayar
+         foreach ($transactions as $transaction) {
+             $date = $transaction->created_at->format('Y-m-d');
+             if (!isset($combinedSummary[$date])) {
+                 $combinedSummary[$date] = ['bayar' => 0, 'jumlah_pinjaman' => 0];
+             }
+             $combinedSummary[$date]['bayar'] += $transaction->bayar;
+         }
+ 
+         // Mengelompokkan pinjaman berdasarkan tanggal dan menghitung total jumlah_pinjaman
+         foreach ($pinjaman as $item) {
+             $date = $item->start_date;
+             if (!isset($combinedSummary[$date])) {
+                 $combinedSummary[$date] = ['bayar' => 0, 'jumlah_pinjaman' => 0];
+             }
+             $combinedSummary[$date]['jumlah_pinjaman'] += $item->jumlah_pinjaman;
+         }
+ 
+         // Menampilkan hasil untuk debug
+        
+        return view('pinjaman.laporanpinjaman', compact('combinedSummary', 'startdate', 'enddate'));
+    }
+
 }
