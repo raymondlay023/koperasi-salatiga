@@ -64,15 +64,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/pinjaman/list-transaction', [PinjamanController::class, 'transactionlist'])->name('list.pinjaman.transaction');
     // Route::put('pinjaman-transactions/{id}', [PinjamanController::class, 'updatePinjamanTransaction'])->name('pinjaman.transaction.update');
     Route::put('pinjaman-transactions/{id}', [PinjamanController::class, 'destroyPinjamanTransaction'])->name('pinjaman.transaction.destroy');
+
+    Route::get('/tabungan/index', [TabunganController::class, 'index'])->name('tabungan.index');
+    Route::post('/tabungan/store', [TabunganController::class, 'store'])->name('tabungan.store');
+    Route::get('/tabungan/store/page', [TabunganController::class, 'setortabungan'])->name('tabungan.setor');
+    Route::post('/tabungan/store/insert', [TabunganController::class, 'setorinsert'])->name('tabungan.insert');
+
+    Route::get('/list/transaction/tabungan',[TabunganController::class, 'listtransaction'])->name('list.transaksi.tabungan');
 });
 
 require __DIR__.'/auth.php';
 
 Route::get('/test/{id}', [InventoryController::class,'transaction']);
 
-Route::get('/tabungan/index', [TabunganController::class, 'index'])->name('tabungan.index');
-Route::post('/tabungan/store', [TabunganController::class, 'store'])->name('tabungan.store');
-Route::get('/tabungan/store/page', [TabunganController::class, 'setortabungan'])->name('tabungan.setor');
-Route::post('/tabungan/store/insert', [TabunganController::class, 'setorinsert'])->name('tabungan.insert');
-
-Route::get('/list/transaction/tabungan',[TabunganController::class, 'listtransaction'])->name('list.transaksi.tabungan');

@@ -6,6 +6,13 @@
     svgPath="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z">
     Inventory
 </x-sidebar-item>
+<x-sidebar-list-item menuId="transactionMenu"
+    svgPath="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+    title="Transaksi" :submenus="[
+        ['href' => route('penjualan.index'), 'title' => 'Penjualan'],
+        ['href' => route('pembelian.index'), 'title' => 'Pembelian'],
+    ]">
+</x-sidebar-list-item>
 <x-sidebar-item href="{{ route('member.index') }}"
     svgPath="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z">
     Members
@@ -18,10 +25,3 @@
     svgPath="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z">
     Tabungan
 </x-sidebar-item>
-<x-sidebar-list-item menuId="transactionMenu"
-    svgPath="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-    title="Transaksi" :submenus="[
-        ['href' => route('penjualan.index'), 'title' => 'Penjualan'],
-        ['href' => route('pembelian.index'), 'title' => 'Pembelian'],
-    ]">
-</x-sidebar-list-item>

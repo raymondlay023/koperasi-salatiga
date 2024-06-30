@@ -21,14 +21,14 @@ class TabunganController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user()->name;
-        
+
         $request->validate([
             'member_id' => 'required|exists:koperasi_members,id',
             'saldo' => 'required|numeric|min:0',
             'start_date' => 'required|date',
             'status' => 'required'
         ]);
-    
+
         // Create a new Tabungan record
         Tabungan::create([
             'member_id' => $request->member_id,
@@ -37,10 +37,10 @@ class TabunganController extends Controller
             'status' => $request->status,
             'created_by' => $user,
         ]);
-    
+
         // Redirect back with a success message
         return redirect()->route('tabungan.index')->with('success', 'Tabungan created successfully.');
-        
+
     }
 
 
@@ -50,7 +50,7 @@ class TabunganController extends Controller
         $tabungans = Tabungan::with('membertabungan')->get();
 
         $statuses = $tabungans->pluck('status')->unique();
-        
+
         return view('tabungan.setor', compact('tabungans','statuses'));
     }
 
@@ -60,7 +60,7 @@ class TabunganController extends Controller
         // dd($request->all());
 
         $validatedData = $request->validate([
-            'tabungan_id' => 'required',    
+            'tabungan_id' => 'required',
             'setor' => 'required|numeric|min:0',
             'setor_date' => 'required|date',
             'remark' => 'nullable|string|max:255',
@@ -85,7 +85,10 @@ class TabunganController extends Controller
     public function listtransaction()
     {
         $datas = TabunganTransaction::with('Tabunganlist', 'Tabunganlist.membertabungan')->get();
-        // dd($datas);    
-        return view('tabungan.listtransaction', compact('datas'));
+
+        $tabungans = Tabungan::with('membertabungan')->get();
+        $statuses = $tabungans->pluck('status')->unique();
+        // dd($datas);
+        return view('tabungan.listtransaction', compact('datas', 'tabungans', 'statuses'));
     }
 }

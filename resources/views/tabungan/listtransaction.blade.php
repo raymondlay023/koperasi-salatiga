@@ -1,113 +1,87 @@
 <x-app-layout>
     @section('content')
-    <style>
-    .no-data {
-        text-align: center;
-        color: #ff4d4d;
-        font-size: 1.2em;
-    }
+        <div class="container pt-10 ps-10">
+            <div class="justify-between flex">
+                <div>
+                    <p>
+                        <a href="{{ route('tabungan.index') }}" class="text-blue-800">
+                            Tabungan
+                        </a>
+                        >
+                        <a href="{{ route('list.transaksi.tabungan') }}" class="text-blue-800">
+                            Tabungan Transactions
+                        </a>
+                        >
+                        <span class="text-gray-500">List</span>
+                    </p>
+                    <p class="text-5xl font-bold">
+                        Tabungan Transactions
+                    </p>
+                </div>
+                <div>
+                    <button @click="openModal('create-tabungan-transaction-modal')"
+                        class="focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 mt-5 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-emerald-600 border border-transparent rounded-lg active:bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:shadow-blue-400">
+                        Create Setoran Tabungan
+                    </button>
+                </div>
+                <x-custom-modal id="create-tabungan-transaction-modal" title="Create Setoran Tabungan">
+                    <form action="{{ route('tabungan.insert') }}" method="POST" id="createTabunganTransaction">
+                        @csrf
+                        <div class="form-group">
+                            <x-input-label for="status" :value="_('Status tabungan')" />
+                            <x-select-input name="status" id="status" placeholder="Select status" required>
+                                @foreach ($statuses as $status)
+                                    <option value="{{ $status }}">{{ str_replace('_', ' ', $status) }}</option>
+                                @endforeach
+                            </x-select-input>
+                        </div>
 
-    .table-wrapper {
-        overflow-x: auto;
-        margin: 20px auto;
-        max-width: 100%;
-        background: #fff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-    }
+                        <div class="form-group mt-4">
+                            <x-input-label for="tabungan_id" :value="_('Member')" />
+                            <x-select-input name="tabungan_id" id="tabungan_id" placeholder="Select member" required>
+                                @foreach ($tabungans as $tabungan)
+                                    <option value="{{ $tabungan->id }}" data-status="{{ $tabungan->status ?? '' }}">
+                                        {{ $tabungan->membertabungan->nama_anggota }}</option>
+                                @endforeach
+                            </x-select-input>
+                        </div>
 
-    .styled-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+                        <div class="form-group mt-4">
+                            <x-input-label for="setor" :value="_('Jumlah Setor')" />
+                            <x-text-input type="number" name="setor" id="setor" class="w-full mt-1 block" required />
+                        </div>
 
-    .styled-table thead tr {
-        background-color: #009879;
-        color: #ffffff;
-        text-align: left;
-    }
+                        <div class="form-group mt-4">
+                            <x-input-label for="setor_date" :value="_('Tanggal Setor')" />
+                            <x-text-input type="date" name="setor_date" id="setor_date" class="w-full mt-1 block"
+                                required />
+                        </div>
 
-    .styled-table th, .styled-table td {
-        padding: 12px 15px;
-    }
+                        <div class="form-group mt-4">
+                            <x-input-label for="remark" :value="_('Deskripsi')" />
+                            <x-text-input type="text" name="remark" id="remark" class="w-full mt-1 block" required />
+                        </div>
+                    </form>
+                    <x-slot name="footer">
+                        <x-primary-button onclick="submitFormWithValidation()">
+                            Setor </x-primary-button>
+                    </x-slot>
+                </x-custom-modal>
 
-    .styled-table tbody tr {
-        border-bottom: 1px solid #dddddd;
-    }
-
-    .styled-table tbody tr:nth-of-type(even) {
-        background-color: #f3f3f3;
-    }
-
-    .styled-table tbody tr:last-of-type {
-        border-bottom: 2px solid #009879;
-    }
-
-    .styled-table tbody tr:hover {
-        background-color: #f1f1f1;
-        cursor: pointer;
-    }
-
-    @media screen and (max-width: 600px) {
-        .styled-table thead {
-            display: none;
-        }
-
-        .styled-table, .styled-table tbody, .styled-table tr, .styled-table td {
-            display: block;
-            width: 100%;
-        }
-
-        .styled-table tr {
-            margin-bottom: 15px;
-        }
-
-        .styled-table td {
-            text-align: right;
-            padding-left: 50%;
-            position: relative;
-        }
-
-        .styled-table td::before {
-            content: attr(data-label);
-            position: absolute;
-            left: 0;
-            width: 50%;
-            padding-left: 15px;
-            font-weight: bold;
-            text-align: left;
-        }
-    }
-</style>
-    <a href="{{route('tabungan.index')}}" class="btn btn-primary"> Back to Index</a>
-    @if($datas->isEmpty())
-        <p class="no-data">No transaction available.</p>
-    @else
-        <div class="table-wrapper">
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Nama Anggota</th>
-                        <th>Jenis Tabungan</th>
-                        <th>Jumlah Setor</th>
-                        <th>Tanggal Setor</th>
-                        <th>Deskripsi Tambahan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($datas as $data)
-                        <tr>
-                            <td>{{ $data->Tabunganlist->membertabungan->nama_anggota }}</td>
-                            <td>{{ str_replace('_', ' ', $data->Tabunganlist->status) }}</td>
-                            <td>{{ $data->setor }}</td>
-                            <td>{{ $data->setor_date }}</td>
-                            <td>{{ $data->remark }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            </div>
+            <div class="py-10">
+                <livewire:tabungan-transaction-table />
+            </div>
         </div>
-    @endif
-
     @endsection
+    @push('extraJs')
+        <script>
+            function submitFormWithValidation() {
+                const form = document.getElementById('createTabunganTransaction');
+                if (form.reportValidity()) {
+                    form.submit();
+                }
+            }
+        </script>
+    @endpush
 </x-app-layout>
