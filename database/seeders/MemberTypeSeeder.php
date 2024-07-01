@@ -12,7 +12,8 @@ class MemberTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\MemberType::firstOrCreate(['name' => 'Karyawan Tetap']);
-        \App\Models\MemberType::firstOrCreate(['name' => 'Karyawan Tidak Tetap']);
+        \App\Models\MemberType::truncate();
+        \App\Models\MemberType::updateOrCreate(['name' => 'Anggota Tetap']);
+        \App\Models\MemberType::updateOrCreate(['name' => 'Anggota Tidak Tetap']);
     }
 }

@@ -124,9 +124,15 @@ class PinjamanController extends Controller
     {
         try {
             $pinjamanTransaction = PinjamanTransaction::findOrFail($id);
+
+            // Revert the pinjaman tenor counter
+            $pinjaman = $pinjamanTransaction->Pinjamanlist;
+            $pinjaman->tenor_counter -= 1;
+            $pinjaman->save();
+
             $pinjamanTransaction->delete();
 
-            return redirect()->back()->with('success', '');
+            return redirect()->back()->with('success', 'Pinjaman transaction deleted successfully!');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             abort(404, 'Pinjaman Transaction not found!');
         } catch (\Exception $e) {
@@ -163,7 +169,7 @@ class PinjamanController extends Controller
              }
              $combinedSummary[$date]['bayar'] += $transaction->bayar;
          }
- 
+
          // Mengelompokkan pinjaman berdasarkan tanggal dan menghitung total jumlah_pinjaman
          foreach ($pinjaman as $item) {
              $date = $item->start_date;
@@ -172,9 +178,9 @@ class PinjamanController extends Controller
              }
              $combinedSummary[$date]['jumlah_pinjaman'] += $item->jumlah_pinjaman;
          }
- 
+
          // Menampilkan hasil untuk debug
-        
+
         return view('pinjaman.laporanpinjaman', compact('combinedSummary', 'startdate', 'enddate'));
     }
 

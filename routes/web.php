@@ -63,14 +63,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/pinjaman/bayar-proses', [PinjamanController::class, 'prosesbayar'])->name('pinjaman.bayarproses');
     Route::get('/pinjaman/list-transaction', [PinjamanController::class, 'transactionlist'])->name('list.pinjaman.transaction');
     // Route::put('pinjaman-transactions/{id}', [PinjamanController::class, 'updatePinjamanTransaction'])->name('pinjaman.transaction.update');
-    Route::put('pinjaman-transactions/{id}', [PinjamanController::class, 'destroyPinjamanTransaction'])->name('pinjaman.transaction.destroy');
+    Route::delete('pinjaman-transactions/{id}', [PinjamanController::class, 'destroyPinjamanTransaction'])->name('pinjaman.transaction.destroy');
 
     Route::get('/tabungan/index', [TabunganController::class, 'index'])->name('tabungan.index');
     Route::post('/tabungan/store', [TabunganController::class, 'store'])->name('tabungan.store');
     Route::get('/tabungan/store/page', [TabunganController::class, 'setortabungan'])->name('tabungan.setor');
     Route::post('/tabungan/store/insert', [TabunganController::class, 'setorinsert'])->name('tabungan.insert');
-
+    Route::delete('tabungan/{id}', [TabunganController::class, 'destroy'])->name('tabungan.destroy');
     Route::get('/list/transaction/tabungan',[TabunganController::class, 'listtransaction'])->name('list.transaksi.tabungan');
+    Route::delete('tabungan/list-transaction/{id}', [TabunganController::class, 'destroyTabunganTransaction'])->name('tabungan.transaction.destroy');
+
 
     Route::get('/laporanpinjaman/index', [PinjamanController::class, 'indexlaporan'])->name('laporanpinjamanindex');
     Route::get('/laporanpinjaman/result', [PinjamanController::class, 'laporanpinjaman'])->name('result.laporanpinjaman');

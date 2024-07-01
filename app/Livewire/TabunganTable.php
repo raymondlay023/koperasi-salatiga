@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Tabungan;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\View\View;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
@@ -49,19 +50,20 @@ final class TabunganTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('doc_num')
             ->add('member_name', fn (Tabungan $model) => $model->membertabungan->nama_anggota)
             ->add('handphone', fn (Tabungan $model) => $model->membertabungan->handphone)
-            ->add('saldo')
+            ->add('saldo', fn (Tabungan $model) => 'Rp. ' . number_format($model->saldo, 0, ',', '.'))
             ->add('start_date_formatted', fn (Tabungan $model) => Carbon::parse($model->start_date)->format('d/m/Y'))
             ->add('status')
             ->add('created_by')
-            ->add('created_at_formatted', fn (Tabungan $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('created_at_formatted', fn (Tabungan $model) => Carbon::parse($model->created_at)->format("d/m/Y (h:i:s)"));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
+            Column::make('Document No', 'doc_num'),
             Column::make('Member Name', 'member_name')
                 ->sortable()
                 ->searchable(),
@@ -88,10 +90,6 @@ final class TabunganTable extends PowerGridComponent
             Column::make('Created at', 'created_at_formatted', 'created_at')
                 ->sortable(),
 
-            Column::make('Created at', 'created_at')
-                ->sortable()
-                ->searchable(),
-
             Column::action('Action')
         ];
     }
@@ -103,22 +101,28 @@ final class TabunganTable extends PowerGridComponent
         ];
     }
 
-    #[\Livewire\Attributes\On('edit')]
-    public function edit($rowId): void
+    public function actionsFromView($row) : View
     {
-        $this->js('alert('.$rowId.')');
+        // $members = KoperasiMember::all();
+        return view('partials.tabungan-action-view', ['row' => $row]);
     }
 
-    public function actions(Tabungan $row): array
-    {
-        return [
-            Button::add('edit')
-                ->slot('Edit: '.$row->id)
-                ->id()
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['rowId' => $row->id])
-        ];
-    }
+    // #[\Livewire\Attributes\On('edit')]
+    // public function edit($rowId): void
+    // {
+    //     $this->js('alert('.$rowId.')');
+    // }
+
+    // public function actions(Tabungan $row): array
+    // {
+    //     return [
+    //         Button::add('edit')
+    //             ->slot('Edit: '.$row->id)
+    //             ->id()
+    //             ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+    //             ->dispatch('edit', ['rowId' => $row->id])
+    //     ];
+    // }
 
     /*
     public function actionRules($row): array

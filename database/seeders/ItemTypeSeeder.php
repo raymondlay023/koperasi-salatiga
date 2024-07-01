@@ -8,6 +8,8 @@ class ItemTypeSeeder extends Seeder
 {
     public function run(): void
     {
+
+        \App\Models\ItemType::truncate();
         \App\Models\ItemType::firstOrCreate([
             'name' => 'Sembako',
         ]);

@@ -67,19 +67,20 @@ final class PembelianTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('doc_num')
             ->add('item_name', fn($pembelian) => e($pembelian->inventory->item_name))
             ->add('jumlah_barang')
-            ->add('harga_beli')
+            ->add('harga_beli', fn(Pembelian $model) => 'Rp ' . number_format($model->harga_beli, 0, ',', '.'))
             ->add('supplier')
             ->add('status')
-            ->add('tanggal_beli_formatted', fn (Pembelian $model) => Carbon::parse($model->tanggal_beli)->format('d-m-Y'))
-            ->add('created_at_formatted', fn(Pembelian $model) => Carbon::parse($model->created_at)->setTimezone('Asia/Jakarta')->format('d-m-Y (h:i:s)'));
+            ->add('tanggal_beli_formatted', fn (Pembelian $model) => Carbon::parse($model->tanggal_beli)->format('d/m/Y'))
+            ->add('created_at_formatted', fn(Pembelian $model) => Carbon::parse($model->created_at)->format('d/m/Y (h:i:s)'));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
+            Column::make('Document No', 'doc_num'),
             Column::make('Item name', 'item_name')
                 ->searchable(),
 

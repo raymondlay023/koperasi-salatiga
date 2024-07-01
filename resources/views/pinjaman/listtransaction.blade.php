@@ -1,5 +1,6 @@
 <x-app-layout>
     @section('content')
+        @include('partials.alert-success-error')
         <div class="pt-10 ps-10 container">
             <div class="justify-between flex">
                 <div>
@@ -41,7 +42,7 @@
                     <div class="form-group mt-3">
                         <x-input-label for="bayar" :value="_('Bayar (Rp)')" />
                         <x-text-input type="text" name="bayar" id="bayar" placeholder="Enter amount in Rp"
-                            class="block w-full mt-1"></x-text-input>
+                            class="block w-full mt-1" readonly></x-text-input>
                     </div>
                     <div class="form-group mt-3">
                         <x-input-label for="remark" :value="_('Remark')" />
@@ -68,8 +69,7 @@
             document.getElementById('pinjaman_id').addEventListener('change', function() {
                 var selectedOption = this.options[this.selectedIndex];
                 var bayarPerbulan = selectedOption.getAttribute('data-bayar-perbulan');
-                console.log('ini berapa : ', bayarPerbulan);
-                document.getElementById('bayar').value = bayarPerbulan ? 'Rp ' + bayarPerbulan : '';
+                document.getElementById('bayar').value = bayarPerbulan ? formatRupiah(bayarPerbulan) : '';
             });
             // Function to format input as Indonesian Rupiah
             function formatRupiah(angka) {
@@ -92,6 +92,7 @@
             document.getElementById('bayar').addEventListener('input', function(e) {
                 var input = e.target.value;
                 e.target.value = formatRupiah(input);
+                console.log('test')
             });
         </script>
     @endsection

@@ -68,19 +68,20 @@ final class PenjualanTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('doc_num')
             ->add('item_name', fn($penjualan) => e($penjualan->inventory->item_name))
             ->add('jumlah_jual')
-            ->add('harga_jual')
+            ->add('harga_jual', fn(Penjualan $model) => 'Rp ' . number_format($model->harga_jual, 0, ',', '.'))
             ->add('customer')
             ->add('status')
-            ->add('tanggal_jual_formatted', fn (Penjualan $model) => Carbon::parse($model->tanggal_jual)->format('d-m-Y'))
-            ->add('created_at_formatted', fn(Penjualan $model) => Carbon::parse($model->created_at)->setTimezone('Asia/Jakarta')->format('d-m-Y (h:i:s)'));
+            ->add('tanggal_jual_formatted', fn (Penjualan $model) => Carbon::parse($model->tanggal_jual)->format('d/m/Y'))
+            ->add('created_at_formatted', fn(Penjualan $model) => Carbon::parse($model->created_at)->format('d/m/Y (h:i:s)'));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
+            Column::make('Document No', 'doc_num'),
             Column::make('Item name', 'item_name')
                 ->searchable(),
 

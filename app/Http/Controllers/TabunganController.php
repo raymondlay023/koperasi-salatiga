@@ -7,6 +7,7 @@ use App\Models\KoperasiMember;
 use App\Models\Tabungan;
 use App\Models\TabunganTransaction;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TabunganController extends Controller
 {
@@ -95,7 +96,7 @@ class TabunganController extends Controller
     }
     $tabungan->save();
 
-    return redirect()->route('tabungan.index')->with('success', 'Transaksi berhasil ditambahkan dan saldo diperbarui.');
+    return redirect()->route('list.transaksi.tabungan')->with('success', 'Transaksi berhasil ditambahkan dan saldo diperbarui.');
     }
 
     public function listtransaction()
@@ -140,5 +141,68 @@ class TabunganController extends Controller
 
         return view('tabungan.laporantabungan', compact('result', 'startdate', 'enddate'));
 
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $tabungan = Tabungan::findOrFail($id);
+
+            try {
+                $tabunganTransactions = TabunganTransaction::where('tabungan_id', $tabungan->id);
+                $tabunganTransactions->delete();
+            } catch (\Exception $e) {
+                Log::error('Error deleting Tabungan transactions: ' + $e->getMessage());
+                abort(500, 'An error occurred while deleting the Tabungan transactions');
+            }
+
+            $tabungan->delete();
+            return redirect()->back()->with('success', 'Tabungan deleted successfully!');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            abort(404, 'Tabungan not found!');
+        } catch (\Exception $e) {
+            Log::error('Error deleting record: '.$e->getMessage());
+            abort(500, 'An error occurred while deleting the record');
+        }
+    }
+
+    public function destroyTabunganTransaction($id)
+    {
+        try {
+            $pinjamanTransaction = TabunganTransaction::findOrFail($id);
+
+            try {
+                // Revert tabungan saldo
+                $tabungan = $pinjamanTransaction->tabunganlist;
+
+                if (!$tabungan) {
+                    throw new \Exception('Tabungan related to this transaction not found.');
+                }
+
+                if ($pinjamanTransaction->setor) {
+                    $amount = $pinjamanTransaction->setor;
+                    $tabungan->saldo -= $amount;
+                } elseif ($pinjamanTransaction->tarikan) {
+                    $amount = $pinjamanTransaction->tarikan;
+                    $tabungan->saldo += $amount;
+                } else {
+                    throw new \Exception('Both setor and tarikan are null, unable to revert saldo.');
+                }
+
+                $tabungan->save();
+            } catch (\Exception $e) {
+                Log::error('Error reverting tabungan saldo: ' . $e->getMessage());
+                abort(500, 'An error occurred while reverting the tabungan saldo.');
+            }
+
+            $pinjamanTransaction->delete();
+
+            return redirect()->back()->with('success', 'Tabungan transaction deleted successfully!');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            abort(404, 'Tabungan Transaction not found!');
+        } catch (\Exception $e) {
+            Log::error('Error deleting record: '.$e->getMessage());
+            abort(500, 'An error occurred while deleting the record');
+        }
     }
 }

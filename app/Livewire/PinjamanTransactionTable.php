@@ -51,17 +51,18 @@ final class PinjamanTransactionTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('doc_num')
             ->add('pinjaman_id')
             ->add('peminjam', fn(PinjamanTransaction $model) => $model->Pinjamanlist->memberpinjaman->nama_anggota)
-            ->add('bayar', fn(PinjamanTransaction $model) => 'Rp ' . number_format($model->bayar, 2, ',', '.'))
+            ->add('bayar', fn(PinjamanTransaction $model) => 'Rp ' . number_format($model->bayar, 0, ',', '.'))
             ->add('remark')
-            ->add('created_at_formatted', fn (PinjamanTransaction $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('created_at_formatted', fn (PinjamanTransaction $model) => Carbon::parse($model->created_at)->format("d/m/Y (h:i:s)"));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
+            Column::make('Document No', 'doc_num'),
             Column::make('Peminjam', 'peminjam')
                 ->sortable()
                 ->searchable(),

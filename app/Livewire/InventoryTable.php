@@ -71,7 +71,7 @@ final class InventoryTable extends PowerGridComponent
             ->add('item_name')
             ->add('item_type', fn ($inventory) => e($inventory->type->name))
             ->add('stock')
-            ->add('created_at_formatted', fn ($inventory) => Carbon::parse($inventory->created_at)->setTimezone('Asia/Jakarta')->format('d-m-Y (h:i:s)'));;
+            ->add('created_at_formatted', fn ($inventory) => Carbon::parse($inventory->created_at)->timezone('Asia/Jakarta')->format('d/m/Y (h:i:s)'));;
     }
 
     public function columns(): array

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\TabunganTransaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\View\View;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
@@ -49,26 +50,30 @@ final class TabunganTransactionTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('tabungan_id')
-            ->add('setor')
+            ->add('doc_num')
+            ->add('nama_anggota', fn(TabunganTransaction $model) => $model->Tabunganlist->membertabungan->nama_anggota)
+            ->add('setor', fn(TabunganTransaction $model) => 'Rp. ' . number_format($model->setor, 0, ',', '.'))
+            ->add('tarikan', fn(TabunganTransaction $model) => 'Rp. ' . number_format($model->tarikan, 0, ',', '.'))
             ->add('setor_date_formatted', fn (TabunganTransaction $model) => Carbon::parse($model->setor_date)->format('d/m/Y'))
             ->add('remark')
-            ->add('created_at_formatted', fn(TabunganTransaction $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('created_at_formatted', fn(TabunganTransaction $model) => Carbon::parse($model->created_at)->format("d/m/Y (h:i:s)"));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
-            Column::make('Tabungan id', 'tabungan_id')
+            Column::make('Document No', 'doc_num'),
+            Column::make('Tabungan id', 'nama_anggota')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Setor', 'setor')
+            Column::make('Jumlah Setor', 'setor')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Setor date', 'setor_date_formatted', 'setor_date')
+            Column::make('Jumlah Tarikan', 'tarikan'),
+
+            Column::make('Tanggal Transaksi', 'setor_date_formatted', 'setor_date')
                 ->sortable(),
 
             Column::make('Remark', 'remark')
@@ -89,22 +94,28 @@ final class TabunganTransactionTable extends PowerGridComponent
         ];
     }
 
-    #[\Livewire\Attributes\On('edit')]
-    public function edit($rowId): void
+    public function actionsFromView($row) : View
     {
-        $this->js('alert('.$rowId.')');
+        // $members = KoperasiMember::all();
+        return view('partials.tabungan-transaction-action-view', ['row' => $row]);
     }
 
-    public function actions(TabunganTransaction $row): array
-    {
-        return [
-            Button::add('edit')
-                ->slot('Edit: '.$row->id)
-                ->id()
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['rowId' => $row->id])
-        ];
-    }
+    // #[\Livewire\Attributes\On('edit')]
+    // public function edit($rowId): void
+    // {
+    //     $this->js('alert('.$rowId.')');
+    // }
+
+    // public function actions(TabunganTransaction $row): array
+    // {
+    //     return [
+    //         Button::add('edit')
+    //             ->slot('Edit: '.$row->id)
+    //             ->id()
+    //             ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+    //             ->dispatch('edit', ['rowId' => $row->id])
+    //     ];
+    // }
 
     /*
     public function actionRules($row): array

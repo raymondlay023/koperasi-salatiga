@@ -64,22 +64,23 @@ final class PinjamanTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('doc_num')
             ->add('member_name', fn(Pinjaman $model) => $model->memberpinjaman->nama_anggota)
-            ->add('jumlah_pinjaman', fn(Pinjaman $model) => 'Rp ' . number_format($model->jumlah_pinjaman, 2, ',', '.'))
+            ->add('jumlah_pinjaman', fn(Pinjaman $model) => 'Rp ' . number_format($model->jumlah_pinjaman, 0, ',', '.'))
             ->add('start_date_formatted', fn (Pinjaman $model) => Carbon::parse($model->start_date)->format('d/m/Y'))
-            ->add('end_date_formatted', fn (Pinjaman $model) => Carbon::parse($model->end_date)->format('d/m/Y'))
-            ->add('total_bayar', fn(Pinjaman $model) => 'Rp ' . number_format($model->total_bayar, 2, ',', '.'))
+            ->add('end_date_formatted', fn (Pinjaman $model) => $model->end_date ? Carbon::parse($model->end_date)->format('d/m/Y') : null)
+            ->add('total_bayar', fn(Pinjaman $model) => 'Rp ' . number_format($model->total_bayar, 0, ',', '.'))
             ->add('tenor')
-            ->add('bayar_perbulan', fn(Pinjaman $model) => 'Rp ' . number_format($model->bayar_perbulan, 2, ',', '.'))
+            ->add('bayar_perbulan', fn(Pinjaman $model) => 'Rp ' . number_format($model->bayar_perbulan, 0, ',', '.'))
             ->add('is_lunas', fn(Pinjaman $model) => $model->is_lunas ? 'Lunas' : 'Belum Lunas')
             ->add('tenor_counter', fn(Pinjaman $model) => $model->tenor_counter == null ? 'Belum ada pembayaran' : $model->tenor_counter)
-            ->add('created_at_formatted', fn (Pinjaman $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('created_at_formatted', fn (Pinjaman $model) => Carbon::parse($model->created_at)->format("d/m/Y (h:i:s)"));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
+            Column::make('Document No', 'doc_num'),
             Column::make('Nama Anggota', 'member_name')
                 ->searchable(),
 
