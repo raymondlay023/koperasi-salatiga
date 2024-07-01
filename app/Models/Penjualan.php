@@ -24,4 +24,16 @@ class Penjualan extends Model
     {
         return $this->belongsTo(Inventory::class, 'item_id');
     }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            $customId = "PNJLN/{$model->id}";
+            $model->doc_num = $customId;
+            $model->save(); // Save to update doc_num in the database
+        });
+    }
 }

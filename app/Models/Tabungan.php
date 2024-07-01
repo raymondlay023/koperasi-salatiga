@@ -28,4 +28,15 @@ class Tabungan extends Model
     {
         return $this->hasMany(TabunganTransaction::class, 'tabungan_id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            $customId = "TBG/{$model->id}";
+            $model->doc_num = $customId;
+            $model->save(); // Save to update doc_num in the database
+        });
+    }
 }

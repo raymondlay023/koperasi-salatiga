@@ -31,4 +31,15 @@ class Pinjaman extends Model
     {
         return $this->hasMany(PinjamanTransaction::class, 'pinjaman_id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            $customId = "PNJM/{$model->id}";
+            $model->doc_num = $customId;
+            $model->save(); // Save to update doc_num in the database
+        });
+    }
 }
