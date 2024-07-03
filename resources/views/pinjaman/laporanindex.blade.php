@@ -1,33 +1,34 @@
-<x-app-layout>
-@section('content')
-
-<h1>Laporan Pinjaman</h1>
-
-<form action="{{ route('result.laporanpinjaman') }}" method="GET">
-        @csrf
-
-        <div class="form-group mb-4">
-            <label for="start_date" class="form-label">Start Date</label>
-            <input type="date" class="form-control" id="start_date" name="start_date" required>
-            <div class="invalid-feedback">
-                Please select a valid start date.
-            </div>
+<x-laporan-layout>
+    @include('partials.alert-success-error')
+    <div class="mx-2 my-3">
+        <div class="text-center">
+            <span class="text-2xl font-semibold">
+                Laporan Pinjaman
+            </span>
         </div>
 
-        <div class="form-group mb-4">
-            <label for="end_date" class="form-label">End Date</label>
-            <input type="date" class="form-control" id="end_date" name="end_date" required>
-            <div class="invalid-feedback">
-                Please select a valid end date.
-            </div>
+        <div class="mt-8 text-center">
+            <form action="{{ route('pinjaman.laporan.result') }}" method="GET">
+                @csrf
+
+                <div class="mt-5">
+                    <x-input-label for="start_date" :value="_('Start Date')" class="inline me-2 text-lg" />
+                    <x-text-input type="date" class="form-control" id="start_date" name="start_date"
+                        required></x-text-input>
+                </div>
+
+                <div class="mt-5">
+                    <x-input-label for="end_date" :value="_('End Date')" class="inline me-2 text-lg" />
+                    <x-text-input type="date" class="form-control" id="end_date" name="end_date"
+                        required></x-text-input>
+                </div>
+
+                <div class="mt-8">
+                    <x-primary-button>
+                        <span>Submit</span>
+                    </x-primary-button>
+                </div>
+            </form>
         </div>
-
-        <div class="form-group text-center">
-            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-        </div>
-    </form>
-
-
-@endsection
-
-</x-app-layout>
+    </div>
+</x-laporan-layout>

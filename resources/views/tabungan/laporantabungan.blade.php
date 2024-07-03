@@ -1,5 +1,4 @@
-<x-app-layout>
-    @section('content')
+<x-laporan-layout>
     <style>
         .table-wrapper {
             overflow-x: auto;
@@ -18,8 +17,8 @@
         }
 
         .styled-table thead {
-            background-color: #009879;
-            color: #ffffff;
+            background-color: #35c7aa;
+            color: #000;
             text-align: left;
         }
 
@@ -95,46 +94,50 @@
         }
     </style>
 
-    <h1>Laporan Tabungan dari {{ $startdate }} hingga {{ $enddate }}</h1>
-
-    @if (empty($result))
-        <p>No transactions available for the selected period.</p>
-    @else
-        <div class="table-wrapper">
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Setor Date</th>
-                        <th>Total Setor</th>
-                        <th>Total Tarikan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $totalSetor = 0;
-                        $totalTarikan = 0;
-                    @endphp
-                    @foreach ($result as $date => $data)
-                        <tr>
-                            <td>{{ $date }}</td>
-                            <td>Rp {{ number_format($data['setor'], 0, ',', '.') }}</td>
-                            <td>Rp {{ number_format($data['tarikan'], 0, ',', '.') }}</td>
-                        </tr>
-                        @php
-                            $totalSetor += $data['setor'];
-                            $totalTarikan += $data['tarikan'];
-                        @endphp
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td><strong>Total</strong></td>
-                        <td><strong>Rp {{ number_format($totalSetor, 0, ',', '.') }}</strong></td>
-                        <td><strong>Rp {{ number_format($totalTarikan, 0, ',', '.') }}</strong></td>
-                    </tr>
-                </tfoot>
-            </table>
+    <div class="mx-5">
+        <div class="text-center mb-8 mt-6">
+            <span class="text-3xl font-semibold ">Laporan Tabungan dari {{ $startdate }} hingga
+                {{ $enddate }}</span>
         </div>
-    @endif
-    @endsection
-</x-app-layout>
+
+        @if (empty($result))
+            <p class="text-center mb-6">No transactions available for the selected period.</p>
+        @else
+            <div class="table-wrapper">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Setor Date</th>
+                            <th>Total Setor</th>
+                            <th>Total Tarikan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $totalSetor = 0;
+                            $totalTarikan = 0;
+                        @endphp
+                        @foreach ($result as $date => $data)
+                            <tr>
+                                <td>{{ $date }}</td>
+                                <td>Rp {{ number_format($data['setor'], 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($data['tarikan'], 0, ',', '.') }}</td>
+                            </tr>
+                            @php
+                                $totalSetor += $data['setor'];
+                                $totalTarikan += $data['tarikan'];
+                            @endphp
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td><strong>Rp {{ number_format($totalSetor, 0, ',', '.') }}</strong></td>
+                            <td><strong>Rp {{ number_format($totalTarikan, 0, ',', '.') }}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        @endif
+    </div>
+</x-laporan-layout>

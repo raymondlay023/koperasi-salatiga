@@ -74,11 +74,14 @@ Route::middleware(['auth', 'check.role:1,2'])->group(function () {
     Route::get('/list/transaction/tabungan',[TabunganController::class, 'listtransaction'])->name('list.transaksi.tabungan');
     Route::delete('tabungan/list-transaction/{id}', [TabunganController::class, 'destroyTabunganTransaction'])->name('tabungan.transaction.destroy');
 
-    Route::get('/laporanpinjaman/index', [PinjamanController::class, 'indexlaporan'])->name('laporanpinjamanindex');
-    Route::get('/laporanpinjaman/result', [PinjamanController::class, 'laporanpinjaman'])->name('result.laporanpinjaman');
+    Route::get('/laporantabungan/index',[TabunganController::class, 'indexlaporan'])->name('tabungan.laporan.index');
+    Route::get('/laporantabungan/result',[TabunganController::class, 'laporantabungan'])->name('tabungan.laporan.result');
 
-    Route::get('/laporan',[InventoryController::class, 'laporan'])->name('laporan.view');
-    Route::get('/laporan/result',[InventoryController::class, 'hasillaporanpinjaman'])->name('result.laporan');
+    Route::get('/laporanpinjaman/index', [PinjamanController::class, 'indexlaporan'])->name('pinjaman.laporan.index');
+    Route::get('/laporanpinjaman/result', [PinjamanController::class, 'laporanpinjaman'])->name('pinjaman.laporan.result');
+
+    Route::get('/laporan',[InventoryController::class, 'laporan'])->name('inventory.laporan.index');
+    Route::get('/laporan/result',[InventoryController::class, 'laporanResult'])->name('inventory.laporan.result');
 
     Route::get('/laporan/sembako',[InventoryController::class, 'laporansembako'])->name('laporan.sembako');
     Route::get('/laporan/kedelai',[InventoryController::class, 'laporankedelai'])->name('laporan.kedelai');
@@ -95,5 +98,3 @@ Route::middleware(['auth', 'check.role:1'])->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/laporantabungan/index',[TabunganController::class, 'indexlaporan'])->name('laporantabunganindex');
-Route::get('/laporantabungan/result',[TabunganController::class, 'laporantabungan'])->name('result.laporantabungan');

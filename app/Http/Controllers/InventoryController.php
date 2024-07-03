@@ -83,12 +83,13 @@ class InventoryController extends Controller
 
     public function laporan()
     {
-        return view('inventory.laporan');
+        $types = ItemType::all();
+        return view('inventory.laporan', compact('types'));
     }
 
-    public function hasillaporanpinjaman(Request $request)
+    public function laporanResult(Request $request)
     {
-        
+
         $request->validate([
             'category' => 'required|in:1,2,3',
             'start_date' => 'required|date',
@@ -128,7 +129,7 @@ class InventoryController extends Controller
             ->get();
 
     // dd($data);
-        
+
     $result = [];
 
     foreach ($data as $inventory) {
@@ -151,7 +152,7 @@ class InventoryController extends Controller
     }
 
     return view('inventory.laporansembako', compact('result', 'startDate', 'endDate'));
-        
+
     }
 
     public function laporankedelai(Request $request)
@@ -159,7 +160,7 @@ class InventoryController extends Controller
         $itemtypeid = $request->session()->get('itemtypeid');
         $startDate = $request->session()->get('start_date');
         $endDate = $request->session()->get('end_date');
-        
+
         $data = Inventory::where('item_type_id', $itemtypeid)
         ->with(['pembelian' => function ($query) use ($startDate, $endDate) {
             $query->whereBetween('tanggal_beli', [$startDate, $endDate]);
