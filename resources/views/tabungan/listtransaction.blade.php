@@ -87,8 +87,12 @@
                 <livewire:tabungan-transaction-table />
             </div>
         </div>
+
+        <!-- harusnya script js nya masuk disini nga si mon ? buat filter status sama member  -->
     @endsection
     @push('extraJs')
+
+    
         <script>
             const setorFormGroup = document.getElementById('setor-form-group');
             const tarikanFormGroup = document.getElementById('tarikan-form-group');

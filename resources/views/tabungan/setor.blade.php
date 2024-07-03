@@ -61,6 +61,7 @@
 </div>
 
 <script>
+    ////// INI Jquery yang dipake buat filternya mon 
     $(document).ready(function() {
         $('#status').change(function() {
             var selectedStatus = $(this).val();
@@ -75,6 +76,7 @@
             $('#tabungan_id').val('');
         });
     });
+    ////// INI Jquery yang dipake buat filternya mon 
 
     document.addEventListener('DOMContentLoaded', function () {
             const setorInput = document.getElementById('setor');
