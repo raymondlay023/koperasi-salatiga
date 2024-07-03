@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ItemTypeSeeder::class,
             MemberTypeSeeder::class,
+            RolesTableSeeder::class,
+            InitialOwnerSeeder::class,
         ]);
     }
 }
