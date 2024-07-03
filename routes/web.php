@@ -6,6 +6,7 @@ use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\TabunganController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -23,6 +24,7 @@ use App\Http\Controllers\KoperasiMemberController;
 |
 */
 
+Route::get('/testdata', [DashboardController::class, 'index']);
 Route::get('/', function () {
     return view('welcome');
 });
