@@ -56,7 +56,7 @@ final class TabunganTransactionTable extends PowerGridComponent
             ->add('tarikan', fn(TabunganTransaction $model) => 'Rp. ' . number_format($model->tarikan, 0, ',', '.'))
             ->add('setor_date_formatted', fn (TabunganTransaction $model) => Carbon::parse($model->setor_date)->format('d/m/Y'))
             ->add('remark')
-            ->add('created_at_formatted', fn(TabunganTransaction $model) => Carbon::parse($model->created_at)->format("d/m/Y (h:i:s)"));
+            ->add('created_at_formatted', fn(TabunganTransaction $model) => Carbon::parse($model->created_at)->timezone('Asia/Jakarta')->format("d/m/Y (h:i:s)"));
     }
 
     public function columns(): array

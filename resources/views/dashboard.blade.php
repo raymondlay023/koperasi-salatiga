@@ -8,6 +8,18 @@
     @endpush
 
     @section('content')
+        <div class="mt-10 ms-10 p-4 box-border container border-4">
+            Pembelian
+            <div class="border border-black ">
+                <img src="{{ asset('img/create-account-office-dark.jpeg') }}" class="w-7/12 p-2" alt="" srcset="">
+            </div>
+            <div class="columns-2">
+                <div class="border border-blue-500">col 1</div>
+                <div class="border border-green-500">col 2</div>
+            </div>
+        </div>
+
+
         <div class="container px-6 mx-auto grid">
             <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
                 Dashboard

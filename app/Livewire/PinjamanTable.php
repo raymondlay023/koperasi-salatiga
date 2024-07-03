@@ -74,7 +74,7 @@ final class PinjamanTable extends PowerGridComponent
             ->add('bayar_perbulan', fn(Pinjaman $model) => 'Rp ' . number_format($model->bayar_perbulan, 0, ',', '.'))
             ->add('is_lunas', fn(Pinjaman $model) => $model->is_lunas ? 'Lunas' : 'Belum Lunas')
             ->add('tenor_counter', fn(Pinjaman $model) => $model->tenor_counter == null ? 'Belum ada pembayaran' : $model->tenor_counter)
-            ->add('created_at_formatted', fn (Pinjaman $model) => Carbon::parse($model->created_at)->format("d/m/Y (h:i:s)"));
+            ->add('created_at_formatted', fn (Pinjaman $model) => Carbon::parse($model->created_at)->timezone('Asia/Jakarta')->format("d/m/Y (h:i:s)"));
     }
 
     public function columns(): array

@@ -57,7 +57,7 @@ final class TabunganTable extends PowerGridComponent
             ->add('start_date_formatted', fn (Tabungan $model) => Carbon::parse($model->start_date)->format('d/m/Y'))
             ->add('status')
             ->add('created_by')
-            ->add('created_at_formatted', fn (Tabungan $model) => Carbon::parse($model->created_at)->format("d/m/Y (h:i:s)"));
+            ->add('created_at_formatted', fn (Tabungan $model) => Carbon::parse($model->created_at)->timezone('Asia/Jakarta')->format("d/m/Y (h:i:s)"));
     }
 
     public function columns(): array

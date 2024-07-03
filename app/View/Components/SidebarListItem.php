@@ -12,6 +12,7 @@ class SidebarListItem extends Component
     public $title;
     public $submenus;
     public $menuId;
+    public $isActive;
 
     /**
      * Create a new component instance.
@@ -22,6 +23,20 @@ class SidebarListItem extends Component
         $this->title = $title;
         $this->submenus = $submenus;
         $this->menuId = $menuId;
+        $this->isActive = $this->checkIfActive();
+    }
+
+    /**
+     * Determine if any of the submenus is active.
+     */
+    private function checkIfActive()
+    {
+        foreach ($this->submenus as $submenu) {
+            if (url()->current() == url($submenu['href'])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

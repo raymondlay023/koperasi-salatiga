@@ -1,6 +1,10 @@
 <li {{ $attributes->merge(['class' => 'relative px-6 py-3']) }}>
+    @if ($isActive)
+        <span class="absolute inset-y-0 left-0 w-1 h-12 bg-blue-600 rounded-tr-lg rounded-br-lg"
+            aria-hidden="true"></span>
+    @endif
     <button
-        class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ $isActive ? 'text-gray-800 dark:text-gray-100' : '' }}"
         @click="toggleMenu('{{ $menuId }}')" aria-haspopup="true">
         <span class="inline-flex items-center">
             <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -23,7 +27,8 @@
             aria-label="submenu">
             @foreach ($submenus as $submenu)
                 <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
-                    <a class="w-full" href="{{ $submenu['href'] }}">{{ $submenu['title'] }}</a>
+                    <a class="w-full {{ url()->current() == url($submenu['href']) ? 'text-gray-800 dark:text-gray-100' : '' }}"
+                        href="{{ $submenu['href'] }}">{{ $submenu['title'] }}</a>
                 </li>
             @endforeach
         </ul>

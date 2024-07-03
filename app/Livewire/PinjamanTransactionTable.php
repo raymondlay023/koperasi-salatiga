@@ -56,7 +56,7 @@ final class PinjamanTransactionTable extends PowerGridComponent
             ->add('peminjam', fn(PinjamanTransaction $model) => $model->Pinjamanlist->memberpinjaman->nama_anggota)
             ->add('bayar', fn(PinjamanTransaction $model) => 'Rp ' . number_format($model->bayar, 0, ',', '.'))
             ->add('remark')
-            ->add('created_at_formatted', fn (PinjamanTransaction $model) => Carbon::parse($model->created_at)->format("d/m/Y (h:i:s)"));
+            ->add('created_at_formatted', fn (PinjamanTransaction $model) => Carbon::parse($model->created_at)->timezone('Asia/Jakarta')->format("d/m/Y (h:i:s)"));
     }
 
     public function columns(): array
