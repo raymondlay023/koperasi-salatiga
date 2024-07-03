@@ -1,7 +1,7 @@
 <script src="{{ asset('js/focus-trap.js') }}"></script>
 <div>
     {{-- <button @click="openModal('edit-pinjaman-modal-{{ $row->id }}')"
-        class="mt-5 px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
+        class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-5">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -60,7 +60,7 @@
     </x-custom-modal> --}}
 
     <button @click="openModal('delete-pinjaman-modal-{{ $row->id }}')"
-        class="mt-5 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red">
+        class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="size-5">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -103,7 +103,6 @@
             <strong>Once it deleted, it can't be undone!</strong>
         </div>
         <x-slot name="footer">
-            <!-- Footer content goes here -->
             <button onclick="document.getElementById('formDeletePinjaman{{ $row->id }}').submit()"
                 class="focus:ring-2 focus:ring-red-600 focus:ring-offset-2 w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red">
                 Delete

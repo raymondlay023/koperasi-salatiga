@@ -62,34 +62,6 @@
                 <livewire:tabungan-table />
             </div>
         </div>
-
-
-        {{-- @if ($tabungans->isEmpty())
-            <p style="text-align: center;">No Member available.</p>
-        @else
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nama Anggota</th>
-                        <th>Handphone</th>
-                        <th>Saldo</th>
-                        <th>Tanggal Mulai Menabung</th>
-                        <th>Jenis Tabungan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($tabungans as $tabungan)
-                        <tr>
-                            <td>{{ $tabungan->membertabungan->nama_anggota }}</td>
-                            <td>{{ $tabungan->membertabungan->handphone }}</td>
-                            <td>{{ $tabungan->saldo }}</td>
-                            <td>{{ $tabungan->start_date }}</td>
-                            <td>{{ str_replace('_', ' ', $tabungan->status) }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif --}}
     @endsection
     @push('extraJs')
         <script>

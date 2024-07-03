@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 
 use App\Http\Controllers\KoperasiMemberController;
-
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,14 +29,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'check.role:1,2'])->group(function () {
+    Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/inventory/index', [InventoryController::class,'index'])->name('inventory.stock');
     Route::post('/additem', [InventoryController::class, 'store'])->name('inventory.store');
@@ -75,7 +74,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/list/transaction/tabungan',[TabunganController::class, 'listtransaction'])->name('list.transaksi.tabungan');
     Route::delete('tabungan/list-transaction/{id}', [TabunganController::class, 'destroyTabunganTransaction'])->name('tabungan.transaction.destroy');
 
-
     Route::get('/laporanpinjaman/index', [PinjamanController::class, 'indexlaporan'])->name('laporanpinjamanindex');
     Route::get('/laporanpinjaman/result', [PinjamanController::class, 'laporanpinjaman'])->name('result.laporanpinjaman');
 
@@ -85,11 +83,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/sembako',[InventoryController::class, 'laporansembako'])->name('laporan.sembako');
     Route::get('/laporan/kedelai',[InventoryController::class, 'laporankedelai'])->name('laporan.kedelai');
     Route::get('/laporan/tahutempe',[InventoryController::class, 'laporantahutempe'])->name('laporan.tahu_tempe');
+
+});
+
+Route::middleware(['auth', 'check.role:1'])->group(function () {
+    Route::get('users', [UserController::class, 'indexOwner'])->name('users.index');
+    Route::post('users', [UserController::class, 'store'])->name('users.store');
+    Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('users/{id}', [UserController::class, 'resetPassword'])->name('users.reset.password');
 });
 
 require __DIR__.'/auth.php';
-
-Route::get('/test/{id}', [InventoryController::class,'transaction']);
 
 Route::get('/laporantabungan/index',[TabunganController::class, 'indexlaporan'])->name('laporantabunganindex');
 Route::get('/laporantabungan/result',[TabunganController::class, 'laporantabungan'])->name('result.laporantabungan');

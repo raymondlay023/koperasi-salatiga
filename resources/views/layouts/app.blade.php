@@ -29,6 +29,7 @@
         <div class="flex flex-col flex-1 w-full">
             @include('partials.navbar')
             <main class="h-full overflow-y-auto">
+                @include('partials.alert-success-error')
                 @yield('content')
             </main>
         </div>

@@ -4,7 +4,6 @@
 <x-app-layout>
     @section('content')
         <div class="pt-10 ps-10 container">
-
             <div class="justify-between items-center flex mb-6">
                 <div>
                     <p class="text-5xl font-bold">
@@ -20,7 +19,6 @@
             </div>
 
             <x-custom-modal id="create-inventory-modal" title="Create Item">
-                <!-- Modal 1 content goes here -->
                 <p class="text-sm text-gray-700 dark:text-gray-400">
                 <form method="POST" action="{{ route('inventory.store') }}" id="formCreateInventory">
                     @csrf
@@ -49,7 +47,6 @@
                 </form>
                 </p>
                 <x-slot name="footer">
-                    <!-- Footer content goes here -->
                     <button onclick="document.getElementById('formCreateInventory').submit()"
                         class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
                         Submit

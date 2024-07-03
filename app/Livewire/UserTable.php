@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
-use App\Models\Pinjaman;
-use App\Models\PinjamanTransaction;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
@@ -18,7 +18,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
-final class PinjamanTransactionTable extends PowerGridComponent
+final class UserTable extends PowerGridComponent
 {
     use WithExport;
 
@@ -39,7 +39,7 @@ final class PinjamanTransactionTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return PinjamanTransaction::query();
+        return User::query()->where('role_id', 2);
     }
 
     public function relationSearch(): array
@@ -51,26 +51,20 @@ final class PinjamanTransactionTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('doc_num')
-            ->add('pinjaman_id')
-            ->add('peminjam', fn(PinjamanTransaction $model) => $model->Pinjamanlist->memberpinjaman->nama_anggota)
-            ->add('bayar', fn(PinjamanTransaction $model) => 'Rp ' . number_format($model->bayar, 0, ',', '.'))
-            ->add('remark')
-            ->add('created_at_formatted', fn (PinjamanTransaction $model) => Carbon::parse($model->created_at)->timezone('Asia/Jakarta')->format("d/m/Y (h:i:s)"));
+            ->add('name')
+            ->add('email')
+            ->add('created_at_formatted', fn (User $model) => Carbon::parse($model->created_at)->timezone('Asia/Jakarta')->format("d/m/Y (h:i:s)"));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Document No', 'doc_num'),
-            Column::make('Peminjam', 'peminjam')
-                ->searchable(),
-
-            Column::make('Bayar', 'bayar')
+            Column::make('Id', 'id'),
+            Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Remark', 'remark')
+            Column::make('Email', 'email')
                 ->sortable()
                 ->searchable(),
 
@@ -89,8 +83,8 @@ final class PinjamanTransactionTable extends PowerGridComponent
 
     public function actionsFromView($row) : View
     {
-        $pinjamans = Pinjaman::with('memberpinjaman')->get();
-        return view('partials.pinjaman-transaction-action-view', ['row' => $row, 'pinjamans' => $pinjamans]);
+        $roles = Role::all();
+        return view('partials.user-action-view', ['row' => $row, 'roles' => $roles]);
     }
 
     // #[\Livewire\Attributes\On('edit')]
@@ -99,7 +93,7 @@ final class PinjamanTransactionTable extends PowerGridComponent
     //     $this->js('alert('.$rowId.')');
     // }
 
-    // public function actions(PinjamanTransaction $row): array
+    // public function actions(User $row): array
     // {
     //     return [
     //         Button::add('edit')

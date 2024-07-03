@@ -5,7 +5,6 @@
 @endpush
 
 @section('content')
-    @include('partials.alert-success-error')
     <div class="pt-10 ps-10 container">
         <div class="justify-between items-center flex mb-6">
             <div>
