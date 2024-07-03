@@ -53,6 +53,8 @@ class DashboardController extends Controller
         ];
     
         // Display or return the array for debugging
+
+        // dd($transactionCounts);
        
         return view('dashboard', compact('pembeliansCount', 'penjualansCount', 'userpinjamansCount', 'usertabungansCount', 'chartData', 'transactionCounts'));
     }

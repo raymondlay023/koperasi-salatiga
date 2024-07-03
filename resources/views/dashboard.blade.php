@@ -30,22 +30,22 @@
                 <!-- Card -->
                 <x-dashboard-card
                     svgPath="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-                    title="Total User Pinjaman" value="63" iconColor="orange">
+                    title="Total User Pinjaman" value="{{$userpinjamansCount}}" iconColor="orange">
                 </x-dashboard-card>
 
                 <x-dashboard-card
                     svgPath="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                    title="Total User Tabungan" value="120" iconColor="green">
+                    title="Total User Tabungan" value="{{$usertabungansCount}}" iconColor="green">
                 </x-dashboard-card>
 
                 <x-dashboard-card
                     svgPath="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
-                    title="Total Pembelian" value="90" iconColor="blue">
+                    title="Total Pembelian" value="{{$pembeliansCount}}" iconColor="blue">
                 </x-dashboard-card>
 
                 <x-dashboard-card
                     svgPath="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
-                    title="Total Penjualan" value="29" iconColor="teal">
+                    title="Total Penjualan" value="{{$penjualansCount}}" iconColor="teal">
                 </x-dashboard-card>
 
             </div>
@@ -444,41 +444,206 @@
                     <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
                         Revenue
                     </h4>
-                    <canvas id="pie"></canvas>
-                    <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
-                        <!-- Chart legend -->
-                        <div class="flex items-center">
-                            <span class="inline-block w-3 h-3 mr-1 bg-blue-500 rounded-full"></span>
-                            <span>Shirts</span>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"></span>
-                            <span>Shoes</span>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"></span>
-                            <span>Bags</span>
-                        </div>
+                    <canvas id="inventoryPieChart"></canvas>
+                    <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400" id="chartLegend">
+                        <!-- Chart legend will be generated here -->
                     </div>
+                    <div id="tooltip" class="hidden p-2 bg-gray-700 text-white rounded"></div>
                 </div>
                 <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                     <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                        Traffic
+                        Transactions Summary
                     </h4>
-                    <canvas id="line"></canvas>
+                    <canvas id="transactionsBarChart"></canvas>
                     <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
                         <!-- Chart legend -->
                         <div class="flex items-center">
                             <span class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"></span>
-                            <span>Organic</span>
+                            <span>Pinjaman Transactions</span>
                         </div>
                         <div class="flex items-center">
                             <span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"></span>
-                            <span>Paid</span>
+                            <span>Tabungan Transactions</span>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const data = @json($chartData);
+
+    // Prepare data for the pie chart
+    const labels = data.map(item => item.type_name);
+    const backgroundColors = [
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+    ];
+    const borderColors = [
+        'rgba(54, 162, 235, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+    ];
+
+    const totalStocks = data.map(item => item.items.reduce((sum, currentItem) => sum + currentItem.stock, 0));
+
+    const ctx = document.getElementById('inventoryPieChart').getContext('2d');
+    const inventoryPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: totalStocks,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        }
+    });
+
+    // Generate chart legend
+    const legendContainer = document.getElementById('chartLegend');
+    labels.forEach((label, index) => {
+        const legendItem = document.createElement('div');
+        legendItem.className = 'flex items-center';
+        legendItem.dataset.index = index;
+        legendItem.dataset.details = JSON.stringify(data[index].items);
+
+        const legendColor = document.createElement('span');
+        legendColor.className = 'inline-block w-3 h-3 mr-1';
+        legendColor.style.backgroundColor = backgroundColors[index];
+        legendColor.style.borderColor = borderColors[index];
+        legendItem.appendChild(legendColor);
+
+        const legendText = document.createElement('span');
+        legendText.textContent = label;
+        legendItem.appendChild(legendText);
+
+        legendContainer.appendChild(legendItem);
+
+        // Add hover event listeners
+        legendItem.addEventListener('mouseenter', showTooltip);
+        legendItem.addEventListener('mouseleave', hideTooltip);
+    });
+
+    const tooltip = document.getElementById('tooltip');
+
+    function showTooltip(event) {
+        const details = JSON.parse(event.target.closest('div').dataset.details);
+        let tooltipContent = `<strong>${labels[event.target.closest('div').dataset.index]}</strong><br>`;
+        details.forEach(item => {
+            tooltipContent += `${item.item_name}: ${item.stock}<br>`;
+        });
+        tooltip.innerHTML = tooltipContent;
+        tooltip.style.left = `${event.pageX}px`;
+        tooltip.style.top = `${event.pageY}px`;
+        tooltip.classList.remove('hidden');
+    }
+
+    function hideTooltip() {
+        tooltip.classList.add('hidden');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Data for transactions
+    const transactionCounts = @json($transactionCounts);
+    const transactionLabels = ["Pinjaman Transactions", "Tabungan Transactions"];
+    const transactionData = [transactionCounts.total_pinjaman_transaction, transactionCounts.total_tabungan_transaction];
+    const transactionColors = ['rgba(54, 162, 235, 0.7)', 'rgba(153, 102, 255, 0.7)'];
+
+    const ctxTransactions = document.getElementById('transactionsBarChart').getContext('2d');
+    const transactionsBarChart = new Chart(ctxTransactions, {
+        type: 'bar',
+        data: {
+            labels: transactionLabels,
+            datasets: [{
+                label: 'Transactions',
+                data: transactionData,
+                backgroundColor: transactionColors,
+                borderColor: transactionColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y;
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        beginAtZero: true,
+                        precision: 0,
+                        stepSize: 1 // Ensure ticks increment by 1
+                    }
+                }
+            }
+        }
+    });
+});
+
+
+</script>
+
+<style>
+#tooltip {
+    position: absolute;
+    z-index: 1000;
+    pointer-events: none;
+}
+</style>
     @endsection
 </x-app-layout>
+
+
+
+
+
+
+

@@ -30,6 +30,11 @@ class TabunganController extends Controller
             'status' => 'required'
         ]);
 
+        $existingTabungan = Tabungan::where('member_id', $request->member_id)->first();
+        if ($existingTabungan) {
+            return redirect()->back()->withErrors(['member_id' => 'Member already has a tabungan.'])->withInput();
+        }
+        
         // Create a new Tabungan record
         Tabungan::create([
             'member_id' => $request->member_id,

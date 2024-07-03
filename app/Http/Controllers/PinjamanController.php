@@ -32,6 +32,11 @@ class PinjamanController extends Controller
             'bayar_perbulan' => 'required|string',
         ]);
 
+        $existingPinjaman = Pinjaman::where('member_id', $validated['member_id'])->first();
+        if ($existingPinjaman) {
+            return redirect()->back()->withErrors(['member_id' => 'User already has a pinjaman.'])->withInput();
+        }
+
         function parseRupiah($value) {
             // Remove "Rp", non-breaking space (UTF-8 encoded), and thousands separator, then parse as float
             $cleanedValue = str_replace(['Rp', "\xc2\xa0", '.', ' '], '', $value);
