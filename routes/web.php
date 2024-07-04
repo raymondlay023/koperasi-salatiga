@@ -25,9 +25,10 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/testdata', [DashboardController::class, 'index']);
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',  [DashboardController::class, 'welcome']);
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 
 Route::middleware(['auth', 'check.role:1,2'])->group(function () {

@@ -58,4 +58,19 @@ class DashboardController extends Controller
        
         return view('dashboard', compact('pembeliansCount', 'penjualansCount', 'userpinjamansCount', 'usertabungansCount', 'chartData', 'transactionCounts'));
     }
+
+    public function welcome()
+    {
+        $pembelians = Pembelian::get();
+        $penjualans = Penjualan::get();
+        $userpinjamans = Pinjaman::get();
+        $usertabungans = Tabungan::get();
+
+        $pembeliansCount = $pembelians->count();
+        $penjualansCount = $penjualans->count();
+        $userpinjamansCount = $userpinjamans->count();
+        $usertabungansCount = $usertabungans->count();
+        // dd($pembeliansCount);
+        return view('welcome', compact('pembeliansCount', 'penjualansCount', 'userpinjamansCount', 'usertabungansCount'));
+    }
 }
