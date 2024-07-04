@@ -91,9 +91,26 @@
         <!-- harusnya script js nya masuk disini nga si mon ? buat filter status sama member  -->
     @endsection
     @push('extraJs')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     
         <script>
+
+        $(document).ready(function() {
+                $('#status').change(function() {
+                    var selectedStatus = $(this).val();
+                    $('#tabungan_id option').each(function() {
+                        var memberStatus = $(this).data('status');
+                        if (selectedStatus === '' || memberStatus === selectedStatus) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                    $('#tabungan_id').val('');
+                });
+            });
+
             const setorFormGroup = document.getElementById('setor-form-group');
             const tarikanFormGroup = document.getElementById('tarikan-form-group');
             const setorInput = document.getElementById('setor');
