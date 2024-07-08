@@ -13,7 +13,7 @@ class MemberTypeSeeder extends Seeder
     public function run(): void
     {
         \App\Models\MemberType::truncate();
-        \App\Models\MemberType::updateOrCreate(['name' => 'Anggota Tetap']);
-        \App\Models\MemberType::updateOrCreate(['name' => 'Anggota Tidak Tetap']);
+        \App\Models\MemberType::updateOrCreate(['name' => 'Anggota']);
+        \App\Models\MemberType::updateOrCreate(['name' => 'Non Anggota']);
     }
 }

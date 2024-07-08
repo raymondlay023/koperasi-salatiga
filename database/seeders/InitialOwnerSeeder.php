@@ -14,6 +14,7 @@ class InitialOwnerSeeder extends Seeder
      */
     public function run(): void
     {
+        \App\Models\User::truncate();
         User::create([
             'role_id' => 1,
             'name' => 'ownerkoptig',

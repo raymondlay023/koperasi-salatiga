@@ -27,7 +27,7 @@ class PembelianController extends Controller
             'item_id' => 'required|exists:inventories,id',
             'jumlah_barang' => 'required|integer|min:0',
             'harga_beli' => 'required|numeric|min:0',
-            'supplier' => 'required|string|max:255',
+            'supplier' => 'string|max:255|nullable',
             'status' => 'required|string|max:255',
             'tanggal_beli' => 'required|date',
         ]);
