@@ -27,7 +27,7 @@ class PenjualanController extends Controller
             'item_id' => 'required|exists:inventories,id',
             'jumlah_jual' => 'required|integer|min:0',
             'harga_jual' => 'required|numeric|min:0',
-            'customer' => 'required|string|max:255',
+            'customer' => 'string|max:255|nullable',
             'status' => 'required|string|max:255',
             'tanggal_jual' => 'required|date',
         ]);

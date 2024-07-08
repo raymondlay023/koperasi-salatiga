@@ -58,7 +58,7 @@
                 <div class="form-group mt-3">
                     <x-input-label for="customer" :value="_('Customer')"></x-input-label>
                     <x-text-input type="text" id="customer" class="block mt-1 w-full" name="customer" :value="old('customer')"
-                        required />
+                        />
                 </div>
                 <div class="form-group mt-3">
                     <x-input-label for="status" :value="_('Status')"></x-input-label>
