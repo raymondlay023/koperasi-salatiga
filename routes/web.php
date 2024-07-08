@@ -31,7 +31,7 @@ Route::get('/',  [DashboardController::class, 'welcome']);
 // });
 
 
-Route::middleware(['auth', 'check.role:1,2'])->group(function () {
+Route::middleware(['auth', 'check.role:1,2,3,4'])->group(function () {
     // Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -39,6 +39,16 @@ Route::middleware(['auth', 'check.role:1,2'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+});
+
+Route::middleware(['auth', 'check.role:1'])->group(function () {
+    Route::get('users', [UserController::class, 'indexOwner'])->name('users.index');
+    Route::post('users', [UserController::class, 'store'])->name('users.store');
+    Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('users/{id}', [UserController::class, 'resetPassword'])->name('users.reset.password');
+});
+
+Route::middleware(['auth', 'check.role:1,2,3'])->group(function() {
     Route::get('/inventory/index', [InventoryController::class,'index'])->name('inventory.stock');
     Route::post('/additem', [InventoryController::class, 'store'])->name('inventory.store');
     Route::put('inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
@@ -53,6 +63,15 @@ Route::middleware(['auth', 'check.role:1,2'])->group(function () {
     Route::post('/pembelian', [PembelianController::class, 'inputpembelian'])->name('pembelian.store');
     Route::delete('/pembelian/{id}', [PembelianController::class, 'destroy'])->name('pembelian.destroy');
 
+    Route::get('/laporan',[InventoryController::class, 'laporan'])->name('inventory.laporan.index');
+    Route::get('/laporan/result',[InventoryController::class, 'laporanResult'])->name('inventory.laporan.result');
+
+    Route::get('/laporan/sembako',[InventoryController::class, 'laporansembako'])->name('laporan.sembako');
+    Route::get('/laporan/kedelai',[InventoryController::class, 'laporankedelai'])->name('laporan.kedelai');
+    Route::get('/laporan/tahutempe',[InventoryController::class, 'laporantahutempe'])->name('laporan.tahu_tempe');
+});
+
+Route::middleware(['auth', 'check.role:1,2,4'])->group(function() {
     Route::get('/members', [KoperasiMemberController::class, 'index'])->name('member.index');
     Route::get('/members/create', [KoperasiMemberController::class, 'create'] )->name('member.create');
     Route::post('/members', [KoperasiMemberController::class, 'store'])->name('member.store');
@@ -81,21 +100,6 @@ Route::middleware(['auth', 'check.role:1,2'])->group(function () {
 
     Route::get('/laporanpinjaman/index', [PinjamanController::class, 'indexlaporan'])->name('pinjaman.laporan.index');
     Route::get('/laporanpinjaman/result', [PinjamanController::class, 'laporanpinjaman'])->name('pinjaman.laporan.result');
-
-    Route::get('/laporan',[InventoryController::class, 'laporan'])->name('inventory.laporan.index');
-    Route::get('/laporan/result',[InventoryController::class, 'laporanResult'])->name('inventory.laporan.result');
-
-    Route::get('/laporan/sembako',[InventoryController::class, 'laporansembako'])->name('laporan.sembako');
-    Route::get('/laporan/kedelai',[InventoryController::class, 'laporankedelai'])->name('laporan.kedelai');
-    Route::get('/laporan/tahutempe',[InventoryController::class, 'laporantahutempe'])->name('laporan.tahu_tempe');
-
-});
-
-Route::middleware(['auth', 'check.role:1'])->group(function () {
-    Route::get('users', [UserController::class, 'indexOwner'])->name('users.index');
-    Route::post('users', [UserController::class, 'store'])->name('users.store');
-    Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::get('users/{id}', [UserController::class, 'resetPassword'])->name('users.reset.password');
 });
 
 require __DIR__.'/auth.php';

@@ -19,6 +19,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class TabunganTable extends PowerGridComponent
 {
+    public int $memberId = 0;
     use WithExport;
 
     public function setUp(): array
@@ -38,12 +39,21 @@ final class TabunganTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Tabungan::query();
+        return Tabungan::query()
+            ->when($this->memberId,
+            fn($builder) => $builder->whereHas(
+                'membertabungan',
+                fn($builder) => $builder->where('member_id', $this->memberId)
+            )->with(['membertabungan']));
     }
 
     public function relationSearch(): array
     {
-        return [];
+        return [
+            'membertabungan' => [
+                'nama_anggota',
+            ]
+        ];
     }
 
     public function fields(): PowerGridFields
