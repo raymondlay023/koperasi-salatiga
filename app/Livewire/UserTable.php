@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Enums\UserRoleEnum;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -20,6 +21,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class UserTable extends PowerGridComponent
 {
+    public int $roleId = 0;
     use WithExport;
 
     public function setUp(): array
@@ -39,12 +41,22 @@ final class UserTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return User::query()->where('role_id', 2);
+        return User::query()
+            ->whereNot('role_id', 1)
+            ->when($this->roleId,
+            fn($builder) => $builder->whereHas(
+                'role',
+                fn($builder) => $builder->where('role_id', $this->roleId)
+            )->with(['role']));
     }
 
     public function relationSearch(): array
     {
-        return [];
+        return [
+            'role' => [
+                'role_name'
+            ]
+        ];
     }
 
     public function fields(): PowerGridFields
@@ -53,6 +65,7 @@ final class UserTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('email')
+            ->add('role_name', fn(User $model) => $model->role->role_name)
             ->add('created_at_formatted', fn (User $model) => Carbon::parse($model->created_at)->timezone('Asia/Jakarta')->format("d/m/Y (h:i:s)"));
     }
 
@@ -68,6 +81,9 @@ final class UserTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
+            Column::make('Role', 'role_name')
+                ->searchable(),
+
             Column::make('Created at', 'created_at_formatted', 'created_at')
                 ->sortable(),
 
@@ -78,6 +94,9 @@ final class UserTable extends PowerGridComponent
     public function filters(): array
     {
         return [
+            Filter::enumSelect('role_name', 'users.role_id')
+                ->dataSource(UserRoleEnum::cases())
+                ->optionLabel('users.role_id'),
         ];
     }
 

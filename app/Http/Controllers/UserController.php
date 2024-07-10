@@ -15,7 +15,8 @@ class UserController extends Controller
 {
     public function indexowner()
     {
-        return view('users.index');
+        $roles = Role::all();
+        return view('users.index', compact('roles'));
     }
 
     public function store(Request $request)
@@ -25,12 +26,13 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'role_id' => 'required|integer|in:1,2,3,4'
             ]);
 
             User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'role_id' => 2,
+                'role_id' => $request->role_id,
                 'password' => Hash::make($request->password),
             ]);
 

@@ -6,17 +6,17 @@
         <div class="justify-between flex">
             <div>
                 <p>
-                    <a href="{{ route('users.index') }}" class="text-blue-800"> Admin Users </a> > <span
+                    <a href="{{ route('users.index') }}" class="text-blue-800"> Users </a> > <span
                         class="text-gray-500">List</span>
                 </p>
                 <p class="text-5xl font-bold">
-                    Admin Users
+                    Users
                 </p>
             </div>
             <div>
                 <button @click="openModal('create-user-modal')"
                     class="mt-5 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
-                    Create Admin User
+                    Create User
                 </button>
             </div>
         </div>
@@ -39,6 +39,22 @@
                     <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
                         required autocomplete="username" />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                </div>
+
+                <!-- Role -->
+                <div class="mt-4">
+                    <x-input-label for="role_id" :value="__('Role')" />
+                    <x-select-input id="role_id" class="block mt-1 w-full" type="text" name="role_id" :value="old('role_id')"
+                        required placeholder="Select role">
+                        @foreach ($roles as $role)
+                            @if ($role->role_name != 'Owner')
+                                <option value="{{ $role->id }}">{{ $role->role_name }}</option>
+                            @endif
+                        @endforeach
+                    </x-select-input>
+                    {{-- <x-text-input id="role_id" class="block mt-1 w-full" type="text" name="role_id" :value="old('role_id')"
+                        required /> --}}
+                    <x-input-error :messages="$errors->get('role_id')" class="mt-2" />
                 </div>
 
                 <!-- Password -->
