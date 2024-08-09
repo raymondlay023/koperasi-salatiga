@@ -167,7 +167,25 @@ class InventoryController extends Controller
         }, 'penjualan' => function ($query) use ($startDate, $endDate) {
             $query->whereBetween('tanggal_jual', [$startDate, $endDate]);
         }])
-        ->get();
+        ->get()
+        ->map(function ($item) use ($startDate) {
+            // Check if pembelian is empty
+            if ($item->pembelian->isEmpty()) {
+                $latestPembelian = Pembelian::where('item_id', $item->id)
+                    ->where('tanggal_beli', '<', $startDate)
+                    ->orderBy('tanggal_beli', 'desc') // Get the latest transaction
+                    ->first(); // Get a single latest record
+                    if ($latestPembelian) {
+                        $item->setRelation('pembelian', collect([$latestPembelian]));
+                    } else {
+                        $item->setRelation('pembelian', collect([]));
+                    }
+            }
+            return $item;
+        });
+        // dd($data);
+        
+                
 
         $result = [];
 
